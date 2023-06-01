@@ -39,7 +39,7 @@ public class AdvanceWarsServer {
             //Bind service on rmiregistry and wait for calls
             if (this.contextRMI.getRegistry() != null) {
                 //============ Create Servant ============
-                this.gameFactoryRI = new GameFactoryImpl(this);
+                this.gameFactoryRI = new GameFactoryImpl();
 
                 //Get service url (including servicename)
                 String serviceUrl = contextRMI.getServicesUrl(0);
