@@ -9,4 +9,5 @@ public interface GameFactoryRI extends Remote {
     public boolean register(String username, String pwd) throws RemoteException;
     HashMap<String, GameSessionRI> getSessions() throws RemoteException;
     void setSession(HashMap<String, GameSessionRI> sessions) throws RemoteException;
+
 }

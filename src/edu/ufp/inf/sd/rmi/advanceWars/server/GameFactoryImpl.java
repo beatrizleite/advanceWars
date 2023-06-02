@@ -42,11 +42,16 @@ public class GameFactoryImpl extends UnicastRemoteObject implements GameFactoryR
 
     @Override
     public HashMap<String, GameSessionRI> getSessions() throws RemoteException {
-        return null;
+        return sessions;
     }
 
     @Override
     public void setSession(HashMap<String, GameSessionRI> sessions) throws RemoteException {
+        this.sessions = sessions;
+    }
 
+    protected void removeSession(String username) throws RemoteException {
+        this.sessions.remove(username);
+        System.out.println("We're in GameFactoryImpl and the user "+username+" just logged out!");
     }
 }
