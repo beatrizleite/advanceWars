@@ -54,7 +54,7 @@ public class StartMenu implements ActionListener {
 	private void AddGui() {
 		Game.gui.add(New);
 		Game.gui.add(Load);
-		//Game.gui.add(Join);
+		Game.gui.add(Join);
 		Game.gui.add(Editor);
 		Game.gui.add(Credits);
 		Game.gui.add(Options);
@@ -68,6 +68,8 @@ public class StartMenu implements ActionListener {
 		maps_list.setBounds(0, 0, 140, 260);
 		maps_list.setSelectedIndex(0);
 	}
+
+
 	private void AddListeners() {
 		New.addActionListener(this);
 		Load.addActionListener(this);

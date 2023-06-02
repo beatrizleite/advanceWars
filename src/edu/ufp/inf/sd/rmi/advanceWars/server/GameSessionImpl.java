@@ -37,9 +37,14 @@ public class GameSessionImpl extends UnicastRemoteObject implements GameSessionR
 
     @Override
     public AdvanceWarsRI createGame() throws RemoteException {
+        //TBD: acabar os lobbies e a criação deles
+        /*
         AdvanceWarsRI advanceWarsRI = new AdvanceWarsImpl();
         games.add(advanceWarsRI);
         db.addGame(user.getName(), advanceWarsRI);
         return advanceWarsRI;
+        */
+        return null;
     }
+
 }

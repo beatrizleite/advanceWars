@@ -2,13 +2,21 @@ package edu.ufp.inf.sd.rmi.advanceWars.client;
 
 import edu.ufp.inf.sd.rmi.advanceWars.server.*;
 import edu.ufp.inf.sd.rmi.advanceWars.util.rmisetup.SetupContextRMI;
+
+import javax.print.attribute.standard.RequestingUserName;
 import javax.swing.*;
 import engine.Game;
 
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.Registry;
+import java.util.HashMap;
+import java.util.Objects;
 import java.util.Observer;
+import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -27,6 +35,10 @@ public class AdvanceWarsClient extends JFrame {
         initContext(args);
         this.lookup();
         login();
+
+        //para mostrar utilizadores online
+        //menu();
+
         new Game();
 
         advanceWarsRI = gameSessionRI.createGame();
@@ -76,10 +88,78 @@ public class AdvanceWarsClient extends JFrame {
     }
 
     private void login() throws RemoteException {
-        String username = JOptionPane.showInputDialog("Username: ");
-        String password = JOptionPane.showInputDialog("Password: ");
-        this.gameSessionRI = gameFactoryRI.login(username, password);
-        this.username = username;
+        String choice = JOptionPane.showInputDialog("Enter \'L\' for Login or \'R\' for register: ");
+        String username, password;
+        switch (choice) {
+            case "R" -> {
+                try {
+                    username = JOptionPane.showInputDialog("Username: ");
+                    password = JOptionPane.showInputDialog("Password: ");
+                    gameFactoryRI.register(username, password);
+                    gameSessionRI = gameFactoryRI.login(username, password);
+                    this.username = username;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            case "L" -> {
+                try {
+                    username = JOptionPane.showInputDialog("Username: ");
+                    password = JOptionPane.showInputDialog("Password: ");
+                    this.gameSessionRI = gameFactoryRI.login(username, password);
+                    this.username = username;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    private JButton refresh;
+    private JList listUsers;
+
+    private void menu() throws RemoteException {
+        listUsers = new JList(getSessions());
+        refresh = new JButton("Refresh");
+
+        setPreferredSize(new Dimension(300,400));
+        setLayout(null);
+
+        add(listUsers);
+        add(refresh);
+
+        listUsers.setBounds(30, 35, 200, 95);
+        refresh.setBounds(165, 390, 100, 25);
+
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.pack();
+        this.setVisible(true);
+
+        refresh.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                try {
+                    updateUsers();
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    public DefaultListModel getSessions() throws RemoteException {
+        DefaultListModel model = new DefaultListModel();
+        HashMap<String, GameSessionRI> sessions = gameFactoryRI.getSessions();
+        for (GameSessionRI session : sessions.values()) {
+            if (!Objects.equals(session.getUsername(), this.username)) {
+                model.addElement(session.getUsername());
+            }
+        }
+        return model;
+    }
+
+    public void updateUsers() throws RemoteException {
+        listUsers.setModel(getSessions());
     }
 
     public static void main(String[] args) {

@@ -1,10 +1,15 @@
 package engine;
 
+import edu.ufp.inf.sd.rmi.advanceWars.server.GameFactoryRI;
+import edu.ufp.inf.sd.rmi.advanceWars.server.GameSessionRI;
+
 import java.awt.Dimension;
 import java.awt.Image;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import javax.swing.JFrame;
+import javax.swing.*;
 
 public class Game extends JFrame {
 	private static final long serialVersionUID = 1L;
@@ -53,7 +58,8 @@ public class Game extends JFrame {
 	public static List<players.Base> displayC = new ArrayList<players.Base>();
 	public static List<buildings.Base> displayB = new ArrayList<buildings.Base>();
 	public static List<units.Base> displayU = new ArrayList<units.Base>();
-	
+
+	GameFactoryRI gameFactoryRI;
 	public Game() {super (name);
 		//Default Settings of the JFrame
 	    setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -130,7 +136,8 @@ public class Game extends JFrame {
 			try { Thread.sleep(30);} catch (Exception e) {};
 		}
 	}
-	
+
+
 	/**Starts a new game when launched.*/
 	public static void main(String args[]) throws Exception {new Game();}
 }
