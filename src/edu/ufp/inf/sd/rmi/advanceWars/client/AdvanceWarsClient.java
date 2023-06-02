@@ -1,6 +1,6 @@
 package edu.ufp.inf.sd.rmi.advanceWars.client;
 
-import edu.ufp.inf.sd.rmi.advanceWars.server.GameFactoryRI;
+import edu.ufp.inf.sd.rmi.advanceWars.server.*;
 import edu.ufp.inf.sd.rmi.advanceWars.util.rmisetup.SetupContextRMI;
 import javax.swing.*;
 import engine.Game;
@@ -8,6 +8,7 @@ import engine.Game;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.Registry;
+import java.util.Observer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -15,8 +16,24 @@ public class AdvanceWarsClient extends JFrame {
 
     private SetupContextRMI contextRMI;
     private GameFactoryRI gameFactoryRI;
+    private DB db;
+    private GameSessionRI gameSessionRI;
+    private AdvanceWarsRI advanceWarsRI;
+    private ObserverRI observerRI;
+    private String username;
 
-    public AdvanceWarsClient(String[] args) {
+    public AdvanceWarsClient(String[] args) throws RemoteException {
+        this.db= DB.getInstance();
+        initContext(args);
+        this.lookup();
+        login();
+        new Game();
+
+        advanceWarsRI = gameSessionRI.createGame();
+        initObserver(args);
+    }
+
+    private void initContext(String args[]) {
         try {
             //List ans set args
             SetupContextRMI.printArgs(this.getClass().getName(), args);
@@ -28,14 +45,7 @@ public class AdvanceWarsClient extends JFrame {
         } catch (RemoteException e) {
             Logger.getLogger(AdvanceWarsClient.class.getName()).log(Level.SEVERE, null, e);
         }
-        this.lookup();
-        this.startGame();
     }
-
-    private void startGame() {
-        new Game();
-    }
-
     private void lookup() {
         try {
             //Get proxy MAIL_TO_ADDR rmiregistry
@@ -57,7 +67,27 @@ public class AdvanceWarsClient extends JFrame {
         }
     }
 
+    private void initObserver(String args[]) {
+        try {
+            observerRI = new ObserverImpl(this.gameSessionRI.getUsername(), this, this.advanceWarsRI);
+        } catch (RemoteException e) {
+            Logger.getLogger(AdvanceWarsClient.class.getName()).log(Level.SEVERE, null, e);
+        }
+    }
+
+    private void login() throws RemoteException {
+        String username = JOptionPane.showInputDialog("Username: ");
+        String password = JOptionPane.showInputDialog("Password: ");
+        this.gameSessionRI = gameFactoryRI.login(username, password);
+        this.username = username;
+    }
+
     public static void main(String[] args) {
-        new AdvanceWarsClient(args);
+        try {
+            new AdvanceWarsClient(args).setVisible(true);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+
     }
 }
