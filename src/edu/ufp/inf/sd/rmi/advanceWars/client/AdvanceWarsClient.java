@@ -37,7 +37,7 @@ public class AdvanceWarsClient extends JFrame {
         login();
 
         //para mostrar utilizadores online
-        //menu();
+        //online_users();
 
         new Game();
 
@@ -88,10 +88,10 @@ public class AdvanceWarsClient extends JFrame {
     }
 
     private void login() throws RemoteException {
-        String choice = JOptionPane.showInputDialog("Enter \'L\' for Login or \'R\' for register: ");
+        String choice = JOptionPane.showInputDialog("Enter \'l\' for Login or \'r\' for register: ");
         String username, password;
         switch (choice) {
-            case "R" -> {
+            case "r" -> {
                 try {
                     username = JOptionPane.showInputDialog("Username: ");
                     password = JOptionPane.showInputDialog("Password: ");
@@ -102,7 +102,7 @@ public class AdvanceWarsClient extends JFrame {
                     e.printStackTrace();
                 }
             }
-            case "L" -> {
+            case "l" -> {
                 try {
                     username = JOptionPane.showInputDialog("Username: ");
                     password = JOptionPane.showInputDialog("Password: ");
@@ -118,7 +118,7 @@ public class AdvanceWarsClient extends JFrame {
     private JButton refresh;
     private JList listUsers;
 
-    private void menu() throws RemoteException {
+    private void online_users() throws RemoteException {
         listUsers = new JList(getSessions());
         refresh = new JButton("Refresh");
 

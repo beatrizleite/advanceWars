@@ -19,7 +19,7 @@ public class AdvanceWarsImpl extends UnicastRemoteObject implements AdvanceWarsR
 
     AdvanceWarsImpl(UUID id, ArrayList<GameSessionRI> listPlayers, int players, String map) throws RemoteException {
         super();
-        this.state = new State("","");
+        this.state = new State("");
         this.id = id;
         this.listPlayers = listPlayers;
         this.players = players;

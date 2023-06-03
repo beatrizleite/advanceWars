@@ -3,27 +3,18 @@ package edu.ufp.inf.sd.rmi.advanceWars.server;
 import java.io.Serializable;
 
 public class State implements Serializable {
-    private String info;
-    private String id;
+    private String state;
 
-    public State(String id, String info) {
-        this.id = id;
-        this.info = info;
+    public State(String state) {
+        this.state = state;
     }
 
-    public String getInfo() {
-        return info;
+    public String getState() {
+        return state;
     }
 
-    public void setInfo(String info) {
-        this.info = info;
+    public void setState(String state) {
+        this.state = state;
     }
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
 }

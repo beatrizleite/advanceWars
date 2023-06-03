@@ -69,11 +69,11 @@ public class DB extends UnicastRemoteObject {
         //falta o token
     }
 
-    public void removeSession(String user, GameSessionRI gameSessionRI) throws RemoteException {
-        sessions.remove(user, gameSessionRI);
+    public void removeSession(String user) throws RemoteException {
+        sessions.remove(user);
     }
 
-    public void addGame(String user, AdvanceWarsRI advanceWarsRI) {
+    public void addGame(AdvanceWarsRI advanceWarsRI) {
         games.add(advanceWarsRI);
     }
 
@@ -81,6 +81,9 @@ public class DB extends UnicastRemoteObject {
         games.remove(advanceWarsRI);
     }
 
+    public ArrayList<AdvanceWarsRI> getGames() {
+        return games;
+    }
     /*
     public void addObs(String user, ObserverRI observerRI) {
         observers.put(user, observerRI);
