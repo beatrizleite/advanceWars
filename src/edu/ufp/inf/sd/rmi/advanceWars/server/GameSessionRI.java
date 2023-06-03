@@ -10,4 +10,6 @@ public interface GameSessionRI extends Remote {
     String getUsername() throws RemoteException;
     ArrayList<AdvanceWarsRI> getGames() throws RemoteException;
     AdvanceWarsRI createGame() throws RemoteException;
+
+
 }

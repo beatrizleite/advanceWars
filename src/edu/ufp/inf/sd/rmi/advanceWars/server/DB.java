@@ -4,25 +4,26 @@ import edu.ufp.inf.sd.rmi.advanceWars.client.ObserverRI;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
 public class DB extends UnicastRemoteObject {
     private static DB db = null;
-    private final Set<User> users;
+    private final ArrayList<User> users;
     private final HashMap<String, GameSessionRI> sessions;
-    private final HashMap<Integer, GameSessionRI> sessionTokens;
-    private final HashMap<String, ObserverRI> observers;
-    private final HashMap<String, AdvanceWarsRI> games;
+    //private final HashMap<Integer, GameSessionRI> sessionTokens;
+    //private final HashMap<String, ObserverRI> observers;
+    private final ArrayList<AdvanceWarsRI> games;
 
     public DB() throws RemoteException {
         super();
-        this.users = new HashSet<>();
+        this.users = new ArrayList<>();
         this.sessions = new HashMap<>();
-        this.observers = new HashMap<>();
-        this.games = new HashMap<>();
-        this.sessionTokens = new HashMap<>();
+        //this.observers = new HashMap<>();
+        this.games = new ArrayList<>();
+        //this.sessionTokens = new HashMap<>();
 
         //para testar
         User u1 = new User("123","123");
@@ -42,7 +43,7 @@ public class DB extends UnicastRemoteObject {
         return db;
     }
 
-    public Set<User> getUsers() {
+    public ArrayList<User> getUsers() {
         return users;
     }
 
@@ -73,13 +74,14 @@ public class DB extends UnicastRemoteObject {
     }
 
     public void addGame(String user, AdvanceWarsRI advanceWarsRI) {
-        games.put(user, advanceWarsRI);
+        games.add(advanceWarsRI);
     }
 
     public void removeGame(String user, AdvanceWarsRI advanceWarsRI) {
-        games.remove(user, advanceWarsRI);
+        games.remove(advanceWarsRI);
     }
 
+    /*
     public void addObs(String user, ObserverRI observerRI) {
         observers.put(user, observerRI);
     }
@@ -87,6 +89,8 @@ public class DB extends UnicastRemoteObject {
     public void removeObs(String user, ObserverRI observerRI) {
         observers.remove(user, observerRI);
     }
+
+    */
 
     public User getUser(String username) throws RemoteException {
         for(User u: this.users) {
