@@ -16,54 +16,55 @@ public class AdvanceWarsImpl extends UnicastRemoteObject implements AdvanceWarsR
     private int players;
     private int curr_players;
     private String map;
+    private String firstPlayer;
 
-    AdvanceWarsImpl(UUID id, ArrayList<GameSessionRI> listPlayers, int players, String map) throws RemoteException {
+    AdvanceWarsImpl(String map, String firstPlayer) throws RemoteException {
         super();
         this.state = new State("");
-        this.id = id;
-        this.listPlayers = listPlayers;
-        this.players = players;
-        this.curr_players = 0;
+        this.id = UUID.randomUUID();
         this.map = map;
+        this.firstPlayer = firstPlayer;
+        this.listPlayers = new ArrayList<>();
+        this.curr_players = 0;
     }
 
-    public UUID getId() {
+    public UUID getId() throws RemoteException {
         return id;
     }
 
-    public void setId(UUID id) {
+    public void setId(UUID id) throws RemoteException {
         this.id = id;
     }
 
-    public ArrayList<GameSessionRI> getListPlayers() {
+    public ArrayList<GameSessionRI> getListPlayers()throws RemoteException {
         return listPlayers;
     }
 
-    public void setListPlayers(ArrayList<GameSessionRI> listPlayers) {
+    public void setListPlayers(ArrayList<GameSessionRI> listPlayers) throws RemoteException {
         this.listPlayers = listPlayers;
     }
 
-    public int getPlayers() {
+    public int getPlayers() throws RemoteException {
         return players;
     }
 
-    public void setPlayers(int players) {
+    public void setPlayers(int players) throws RemoteException {
         this.players = players;
     }
 
-    public int getCurr_players() {
+    public int getCurr_players() throws RemoteException {
         return curr_players;
     }
 
-    public void setCurr_players(int curr_players) {
+    public void setCurr_players(int curr_players) throws RemoteException {
         this.curr_players = curr_players;
     }
 
-    public String getMap() {
+    public String getMap() throws RemoteException {
         return map;
     }
 
-    public void setMap(String map) {
+    public void setMap(String map) throws RemoteException {
         this.map = map;
     }
 

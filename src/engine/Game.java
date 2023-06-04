@@ -59,7 +59,32 @@ public class Game extends JFrame {
 	public static List<buildings.Base> displayB = new ArrayList<buildings.Base>();
 	public static List<units.Base> displayU = new ArrayList<units.Base>();
 
-	GameFactoryRI gameFactoryRI;
+	public Game(GameFactoryRI gameFactoryRI) {super (name);
+		//Default Settings of the JFrame
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setSize(new Dimension(20*ScreenBase+6,12*ScreenBase+12));
+		setBounds(0,0,20*ScreenBase+6,12*ScreenBase+12);
+		setUndecorated(false);
+		setResizable(false);
+		setLocationRelativeTo(null);
+
+		//Creates all the gui elements and sets them up
+		gui = new Gui(this);
+		add(gui);
+		gui.setFocusable(true);
+		gui.requestFocusInWindow();
+
+		//load images, initialize the map, and adds the input settings.
+		load = new LoadImages();
+		map = new Map();
+		input = new InputHandler();
+		list = new ListData();
+
+		setVisible(true);//This has been moved down here so that when everything is done, it is shown.
+		gui.LoginScreen();
+		save.LoadSettings();
+		GameLoop();
+	}
 	public Game() {super (name);
 		//Default Settings of the JFrame
 	    setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

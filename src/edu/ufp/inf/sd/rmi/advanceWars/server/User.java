@@ -8,12 +8,18 @@ public class User extends UnicastRemoteObject {
     private String name;
     private String pwd;
 
+    private Token token;
+
     public User(String name, String pwd) throws RemoteException {
         super();
         this.name = name;
         this.pwd = pwd;
+        this.token = new Token(name);
     }
 
+    private boolean checkToken() {
+        return token.verify();
+    }
     public String getName() throws RemoteException {
         return name;
     }
@@ -28,5 +34,13 @@ public class User extends UnicastRemoteObject {
 
     public void setPwd(String pwd) {
         this.pwd = pwd;
+    }
+
+    public Token getToken() {
+        return token;
+    }
+
+    public void setToken(Token token) {
+        this.token = token;
     }
 }

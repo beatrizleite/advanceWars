@@ -1,4 +1,4 @@
-package edu.ufp.inf.sd.rmi.advanceWars.client;
+/*package edu.ufp.inf.sd.rmi.advanceWars.client;
 
 import edu.ufp.inf.sd.rmi.advanceWars.server.*;
 import edu.ufp.inf.sd.rmi.advanceWars.util.rmisetup.SetupContextRMI;
@@ -16,7 +16,7 @@ import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class AdvanceWarsClient extends JFrame {
+public class AdvanceWarsClient_interface extends JFrame {
 
     private SetupContextRMI contextRMI;
     private GameFactoryRI gameFactoryRI;
@@ -25,15 +25,13 @@ public class AdvanceWarsClient extends JFrame {
     private AdvanceWarsRI advanceWarsRI;
     private ObserverRI observerRI;
     private String username;
-    Scanner sc = new Scanner(System.in);
 
-    public AdvanceWarsClient(String[] args) throws RemoteException {
+    public AdvanceWarsClient_interface(String[] args) throws RemoteException {
         this.db= DB.getInstance();
         initContext(args);
         this.lookup();
         login();
-        db.listAllGames();
-        //this.startGame();
+        menu();
         //para mostrar utilizadores online
         //online_users();
 
@@ -54,7 +52,7 @@ public class AdvanceWarsClient extends JFrame {
             //Create a context for RMI setup
             contextRMI = new SetupContextRMI(this.getClass(), registryIP, registryPort, new String[]{serviceName});
         } catch (RemoteException e) {
-            Logger.getLogger(AdvanceWarsClient.class.getName()).log(Level.SEVERE, null, e);
+            Logger.getLogger(AdvanceWarsClient_interface.class.getName()).log(Level.SEVERE, null, e);
         }
     }
     private void lookup() {
@@ -69,7 +67,7 @@ public class AdvanceWarsClient extends JFrame {
 
                 //============ Get proxy MAIL_TO_ADDR HelloWorld service ============
                 this.gameFactoryRI = (GameFactoryRI) registry.lookup(serviceUrl);
-                //} else {
+            //} else {
                 //Logger.getLogger(this.getClass().getName()).log(Level.INFO, "registry not bound (check IPs). :(");
                 //registry = LocateRegistry.createRegistry(1099);
             }
@@ -82,22 +80,18 @@ public class AdvanceWarsClient extends JFrame {
         try {
             observerRI = new ObserverImpl(this.gameSessionRI.getUsername(), this, this.advanceWarsRI);
         } catch (RemoteException e) {
-            Logger.getLogger(AdvanceWarsClient.class.getName()).log(Level.SEVERE, null, e);
+            Logger.getLogger(AdvanceWarsClient_interface.class.getName()).log(Level.SEVERE, null, e);
         }
     }
 
     private void login() throws RemoteException {
-        System.out.println("Enter 'l' for Login or 'r' for register: ");
-        String choice = sc.nextLine();
+        String choice = JOptionPane.showInputDialog("Enter 'l' for Login or 'r' for register: ");
         String username, password;
         switch (choice) {
             case "r" -> {
                 try {
-                    System.out.println("Registration!");
-                    System.out.println("Username?");
-                    username = sc.nextLine();
-                    System.out.println("Password?");
-                    password = sc.nextLine();
+                    username = JOptionPane.showInputDialog("Username: ");
+                    password = JOptionPane.showInputDialog("Password: ");
                     gameFactoryRI.register(username, password);
                     gameSessionRI = gameFactoryRI.login(username, password);
                     this.username = username;
@@ -107,11 +101,8 @@ public class AdvanceWarsClient extends JFrame {
             }
             case "l" -> {
                 try {
-                    System.out.println("Login!");
-                    System.out.println("Username?");
-                    username = sc.nextLine();
-                    System.out.println("Password?");
-                    password = sc.nextLine();
+                    username = JOptionPane.showInputDialog("Username: ");
+                    password = JOptionPane.showInputDialog("Password: ");
                     this.gameSessionRI = gameFactoryRI.login(username, password);
                     this.username = username;
                 } catch (Exception e) {
@@ -119,19 +110,17 @@ public class AdvanceWarsClient extends JFrame {
                 }
             }
             default -> {
-                System.out.println("Not a valid option!");
+                JOptionPane.showMessageDialog(new JFrame(), "Not a valid option!", "Dialog", JOptionPane.ERROR_MESSAGE);
             }
         }
     }
 
     private void menu() {
         String map1 = "SmallVs", map2 = "FourCorners";
-        System.out.println("Write 'create' to create a new lobby or 'join' to join an existing lobby: ");
-        String choice = sc.nextLine();
+        String choice = JOptionPane.showInputDialog("Write 'create' to create a new lobby or 'join' to join an existing lobby: ");
         switch(choice) {
             case "create":
-                System.out.println("Choose map: \n-SmallVs (2 players)-> write 'SmallVS'\n-FourCorners (4 players)-> write 'FourCorners'");
-                String map = sc.nextLine();
+                String map = JOptionPane.showInputDialog("Choose map: \n-SmallVs (2 players)-> write 'SmallVS'\n-FourCorners (4 players)-> write 'FourCorners'");
                 switch (map) {
                     case "SmallVs" -> {
                         try {
@@ -197,6 +186,37 @@ public class AdvanceWarsClient extends JFrame {
         });
     }
 
+    private JButton refreshGames;
+    private JList listGames;
+    private void online_games() throws RemoteException {
+        listGames = new JList(getGames());
+        refreshGames = new JButton("Refresh");
+
+        setPreferredSize(new Dimension(300,400));
+        setLayout(null);
+
+        add(listUsers);
+        add(refresh);
+
+        listGames.setBounds(30, 35, 200, 95);
+        refreshGames.setBounds(165, 390, 100, 25);
+
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.pack();
+        this.setVisible(true);
+
+        refresh.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                try {
+                    updateGames();
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
     public DefaultListModel getSessions() throws RemoteException {
         DefaultListModel model = new DefaultListModel();
         ArrayList<GameSessionRI> sessions = gameFactoryRI.getSessions();
@@ -208,17 +228,32 @@ public class AdvanceWarsClient extends JFrame {
         return model;
     }
 
+    public DefaultListModel getGames() throws RemoteException {
+        DefaultListModel model = new DefaultListModel();
+        ArrayList<AdvanceWarsRI> games =this.gameSessionRI.getGames();
+        for (AdvanceWarsRI game : games) {
+            model.addElement(game.getId());
+            model.addElement(game.getState());
+        }
+        return model;
+    }
+    //TBD INTERFACE PARA LISTAR JOGOS
     //entretanto usamos o terminal para testar
+
+    public void updateGames() throws RemoteException {
+        listGames.setModel(getGames());
+    }
     public void updateUsers() throws RemoteException {
         listUsers.setModel(getSessions());
     }
 
     public static void main(String[] args) {
         try {
-            new AdvanceWarsClient(args).setVisible(true);
+            new AdvanceWarsClient_interface(args).setVisible(true);
         } catch (RemoteException e) {
             e.printStackTrace();
         }
 
     }
 }
+*/

@@ -16,7 +16,7 @@ public class ObserverImpl extends UnicastRemoteObject implements ObserverRI {
         super();
         this.advanceWarsClient = advanceWarsClient;
         this.id = id;
-        this.obsState = new State(id,"");
+        this.obsState = new State("obs");
         this.advanceWarsRI = advanceWarsRI;
         this.advanceWarsRI.attach(this);
     }

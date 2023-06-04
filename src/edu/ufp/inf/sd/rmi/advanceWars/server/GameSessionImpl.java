@@ -1,6 +1,5 @@
 package edu.ufp.inf.sd.rmi.advanceWars.server;
 
-import java.lang.reflect.Array;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
@@ -39,17 +38,19 @@ public class GameSessionImpl extends UnicastRemoteObject implements GameSessionR
 
     @Override
     public AdvanceWarsRI createGame(int players, String map, GameSessionRI gameSessionRI) throws RemoteException {
-        //TBD: acabar os lobbies e a criação deles
-        ArrayList<GameSessionRI> sessions = new ArrayList<>();
-        sessions.add(gameSessionRI);
-        UUID uuid = UUID.randomUUID();
-        AdvanceWarsRI game = new AdvanceWarsImpl(uuid, sessions, players, map);
+        ArrayList<AdvanceWarsRI> games;
+        AdvanceWarsRI game = new AdvanceWarsImpl(map, username);
         game.setGameState(new State("waiting"));
+        games = this.db.getGames();
+        games.add(game);
         this.db.addGame(game);
         return game;
     }
 
-    public synchronized void logout() throws RemoteException {
+    public void removeGame(AdvanceWarsRI game) throws RemoteException{
+        this.db.removeGame(game);
+    }
+    public void logout() throws RemoteException {
         this.db.removeSession(this.username);
     }
 
