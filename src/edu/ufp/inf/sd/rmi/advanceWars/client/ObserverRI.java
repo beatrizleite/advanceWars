@@ -4,5 +4,5 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 public interface ObserverRI extends Remote {
-    void update() throws RemoteException;
+    void updateObsState() throws RemoteException;
 }

@@ -7,26 +7,26 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
 public class ObserverImpl extends UnicastRemoteObject implements ObserverRI {
-    private String id;
-    private AdvanceWarsClient advanceWarsClient;
     private State obsState;
-    private AdvanceWarsRI advanceWarsRI;
+    private AdvanceWarsRI game;
 
-    public ObserverImpl(String id, AdvanceWarsClient advanceWarsClient, AdvanceWarsRI advanceWarsRI) throws RemoteException {
+    public ObserverImpl(AdvanceWarsRI game) throws RemoteException {
         super();
-        this.advanceWarsClient = advanceWarsClient;
-        this.id = id;
-        this.obsState = new State("obs");
-        this.advanceWarsRI = advanceWarsRI;
-        this.advanceWarsRI.attach(this);
+        this.obsState = new State("");
+        this.game = game;
+        this.game.attach(this);
     }
 
     @Override
-    public void update() throws RemoteException {
-        this.obsState = advanceWarsRI.getState();
+    public void updateObsState() throws RemoteException {
+        this.obsState = game.getState();
     }
 
-    private State getObsState() {
+    public AdvanceWarsRI getGame() {
+        return game;
+    }
+
+    private State getObsState() throws RemoteException {
         return this.obsState;
     }
 
