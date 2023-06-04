@@ -3,6 +3,7 @@ package menus;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.rmi.RemoteException;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JList;
@@ -84,7 +85,13 @@ public class StartMenu implements ActionListener {
 		Object s = e.getSource();
 		if (s==New) {new PlayerSelection(maps_list.getSelectedValue()+"");}
 		else if (s==Load) {Game.save.LoadGame();MenuHandler.CloseMenu();}
-		else if (s==Join) {Game.error.ShowError("Online features are not added yet.");}
+		else if (s==Join) {
+			try {
+				new Join();
+			} catch (RemoteException ex) {
+				throw new RuntimeException(ex);
+			}
+			Game.error.ShowError("Online features are not added yet.");}
 		else if (s==Editor) {
 			Game.edit.StartEditor(
 					"MapName",

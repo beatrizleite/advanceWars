@@ -36,6 +36,9 @@ public class GameSessionImpl extends UnicastRemoteObject implements GameSessionR
         return this.db.getGames();
     }
 
+    public AdvanceWarsRI getGame(int id) throws RemoteException {
+        return db.getGame(id);
+    }
     @Override
     public AdvanceWarsRI createGame(int players, String map, GameSessionRI gameSessionRI) throws RemoteException {
         ArrayList<AdvanceWarsRI> games;

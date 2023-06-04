@@ -31,11 +31,7 @@ public class AdvanceWarsClient extends JFrame {
         this.db= DB.getInstance();
         initContext(args);
         this.lookup();
-        login();
-        db.listAllGames();
-        //this.startGame();
-        //para mostrar utilizadores online
-        //online_users();
+        new Game();
 
         //initObserver(args);
     }

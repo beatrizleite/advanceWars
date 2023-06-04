@@ -76,6 +76,10 @@ public class DB extends UnicastRemoteObject {
         games.remove(game.getId());
     }
 
+    public AdvanceWarsRI getGame(int id) {
+        return games.get(id);
+    }
+
     public void updateGame(UUID id, AdvanceWarsRI game) {
         games.put(id, game);
     }

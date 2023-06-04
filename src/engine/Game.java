@@ -1,5 +1,7 @@
 package engine;
 
+import edu.ufp.inf.sd.rmi.advanceWars.client.ObserverRI;
+import edu.ufp.inf.sd.rmi.advanceWars.server.AdvanceWarsRI;
 import edu.ufp.inf.sd.rmi.advanceWars.server.GameFactoryRI;
 import edu.ufp.inf.sd.rmi.advanceWars.server.GameSessionRI;
 
@@ -59,6 +61,14 @@ public class Game extends JFrame {
 	public static List<buildings.Base> displayB = new ArrayList<buildings.Base>();
 	public static List<units.Base> displayU = new ArrayList<units.Base>();
 
+
+	public static GameFactoryRI gameFactoryRI;
+	public static GameSessionRI session;
+	public static AdvanceWarsRI gameLobby;
+	public static Game game;
+	public ObserverRI observer;
+
+
 	public Game(GameFactoryRI gameFactoryRI) {super (name);
 		//Default Settings of the JFrame
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -68,6 +78,8 @@ public class Game extends JFrame {
 		setResizable(false);
 		setLocationRelativeTo(null);
 
+		Game.gameFactoryRI = gameFactoryRI;
+		game = this;
 		//Creates all the gui elements and sets them up
 		gui = new Gui(this);
 		add(gui);
