@@ -24,19 +24,11 @@ public class AdvanceWarsClient extends JFrame {
     private GameSessionRI gameSessionRI;
     private AdvanceWarsRI advanceWarsRI;
     private ObserverRI observerRI;
-    private String username;
-    Scanner sc = new Scanner(System.in);
 
     public AdvanceWarsClient(String[] args) throws RemoteException {
         this.db= DB.getInstance();
         initContext(args);
         this.lookup();
-        new Game(gameFactoryRI);
-
-        //initObserver(args);
-    }
-
-    private void startGame() {
         new Game(this.gameFactoryRI);
     }
 
@@ -80,133 +72,6 @@ public class AdvanceWarsClient extends JFrame {
         } catch (RemoteException e) {
             Logger.getLogger(AdvanceWarsClient.class.getName()).log(Level.SEVERE, null, e);
         }
-    }
-
-    private void login() throws RemoteException {
-        System.out.println("Enter 'l' for Login or 'r' for register: ");
-        String choice = sc.nextLine();
-        String username, password;
-        switch (choice) {
-            case "r" -> {
-                try {
-                    System.out.println("Registration!");
-                    System.out.println("Username?");
-                    username = sc.nextLine();
-                    System.out.println("Password?");
-                    password = sc.nextLine();
-                    gameFactoryRI.register(username, password);
-                    gameSessionRI = gameFactoryRI.login(username, password);
-                    this.username = username;
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-            case "l" -> {
-                try {
-                    System.out.println("Login!");
-                    System.out.println("Username?");
-                    username = sc.nextLine();
-                    System.out.println("Password?");
-                    password = sc.nextLine();
-                    this.gameSessionRI = gameFactoryRI.login(username, password);
-                    this.username = username;
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-            default -> {
-                System.out.println("Not a valid option!");
-            }
-        }
-    }
-
-    private void menu() {
-        String map1 = "SmallVs", map2 = "FourCorners";
-        System.out.println("Write 'create' to create a new lobby or 'join' to join an existing lobby: ");
-        String choice = sc.nextLine();
-        switch(choice) {
-            case "create":
-                System.out.println("Choose map: \n-SmallVs (2 players)-> write 'SmallVS'\n-FourCorners (4 players)-> write 'FourCorners'");
-                String map = sc.nextLine();
-                switch (map) {
-                    case "SmallVs" -> {
-                        try {
-                            gameSessionRI.createGame(2, map1, this.gameSessionRI);
-                            startGame();
-                        } catch (RemoteException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                    case "FourCorners" -> {
-                        try {
-                            this.gameSessionRI.createGame(2, map2, this.gameSessionRI);
-                            startGame();
-                        } catch (RemoteException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                    default ->
-                            JOptionPane.showMessageDialog(new JFrame(), "Not a valid option!", "Dialog", JOptionPane.ERROR_MESSAGE);
-                }
-                break;
-            case "join":
-
-
-                break;
-
-
-            default:
-                JOptionPane.showMessageDialog(new JFrame(), "Not a valid option!", "Dialog", JOptionPane.ERROR_MESSAGE);
-        }
-
-    }
-
-    private JButton refresh;
-    private JList listUsers;
-
-    private void online_users() throws RemoteException {
-        listUsers = new JList(getSessions());
-        refresh = new JButton("Refresh");
-
-        setPreferredSize(new Dimension(300,400));
-        setLayout(null);
-
-        add(listUsers);
-        add(refresh);
-
-        listUsers.setBounds(30, 35, 200, 95);
-        refresh.setBounds(165, 390, 100, 25);
-
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.pack();
-        this.setVisible(true);
-
-        refresh.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                try {
-                    updateUsers();
-                } catch (RemoteException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-    }
-
-    public DefaultListModel getSessions() throws RemoteException {
-        DefaultListModel model = new DefaultListModel();
-        ArrayList<GameSessionRI> sessions = gameFactoryRI.getSessions();
-        for (GameSessionRI session : sessions) {
-            if (!Objects.equals(session.getUsername(), this.username)) {
-                model.addElement(session.getUsername());
-            }
-        }
-        return model;
-    }
-
-    //entretanto usamos o terminal para testar
-    public void updateUsers() throws RemoteException {
-        listUsers.setModel(getSessions());
     }
 
     public static void main(String[] args) {
