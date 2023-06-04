@@ -91,8 +91,7 @@ public class StartMenu implements ActionListener {
 			} catch (RemoteException ex) {
 				throw new RuntimeException(ex);
 			}
-			Game.error.ShowError("Online features are not added yet.");}
-		else if (s==Editor) {
+		} else if (s==Editor) {
 			Game.edit.StartEditor(
 					"MapName",
 					16,
@@ -101,6 +100,12 @@ public class StartMenu implements ActionListener {
 		}
 		else if (s==Credits) {new Credits();}
 		else if (s==Options) {new Options();}
-		else if (s==Exit) {System.exit(0);}
+		else if (s==Exit) {
+			try {
+				Game.session.logout();
+			} catch (RemoteException ex) {
+				throw new RuntimeException(ex);
+			}
+			System.exit(0);}
 	}
 }

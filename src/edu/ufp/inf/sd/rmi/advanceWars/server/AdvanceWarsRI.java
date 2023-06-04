@@ -17,11 +17,11 @@ public interface AdvanceWarsRI extends Remote {
     ArrayList<GameSessionRI> getListPlayers() throws RemoteException;
     void setListPlayers(ArrayList<GameSessionRI> listPlayers) throws RemoteException;
     int getPlayers() throws RemoteException;
-
     void setPlayers(int players) throws RemoteException;
     int getCurr_players() throws RemoteException;
     void setCurr_players(int curr_players) throws RemoteException;
     String getMap() throws RemoteException;
     void setMap(String map) throws RemoteException;
     void notifyObs() throws RemoteException;
+    public int getObsId(String user) throws RemoteException;
 }

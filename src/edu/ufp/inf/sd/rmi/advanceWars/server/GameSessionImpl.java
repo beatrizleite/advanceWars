@@ -45,7 +45,7 @@ public class GameSessionImpl extends UnicastRemoteObject implements GameSessionR
         return db.getGame(id);
     }
     @Override
-    public AdvanceWarsRI createGame(int players, String map, GameSessionRI gameSessionRI) throws RemoteException {
+    public AdvanceWarsRI createGame(String map, GameSessionRI gameSessionRI) throws RemoteException {
         ArrayList<AdvanceWarsRI> games;
         AdvanceWarsRI game = new AdvanceWarsImpl(map, username);
         games = this.db.getGames();
@@ -58,6 +58,7 @@ public class GameSessionImpl extends UnicastRemoteObject implements GameSessionR
         this.db.removeGame(game);
     }
     public void logout() throws RemoteException {
+        System.out.println("User "+username+ " logged out!");
         this.db.removeSession(this.username);
     }
 

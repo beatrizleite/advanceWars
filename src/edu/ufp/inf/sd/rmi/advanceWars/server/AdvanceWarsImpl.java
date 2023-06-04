@@ -98,4 +98,14 @@ public class AdvanceWarsImpl extends UnicastRemoteObject implements AdvanceWarsR
         }
     }
 
+    @Override
+    public int getObsId(String user) throws RemoteException {
+        for (int i = 0; i < observers.size(); i++) {
+            if(observers.get(i).getUsername().equals(user)) {
+                return i;
+            }
+        }
+        return 0;
+    }
+
 }

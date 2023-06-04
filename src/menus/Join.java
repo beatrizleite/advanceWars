@@ -1,5 +1,6 @@
 package menus;
 
+import edu.ufp.inf.sd.rmi.advanceWars.client.ObserverImpl;
 import engine.Game;
 import edu.ufp.inf.sd.rmi.advanceWars.server.AdvanceWarsRI;
 import edu.ufp.inf.sd.rmi.advanceWars.server.User;
@@ -14,7 +15,7 @@ import java.awt.font.GlyphMetrics;
 import java.rmi.RemoteException;
 import java.util.Objects;
 
-public class Join implements ActionListener {
+public class Join implements ActionListener, KeyListener {
     String[] titles = {"Dev Team","TITLE HERE","Special Mentions"};
     String[] list1 = {"Serge-David"};//Main Developers
     String[] list2 = {"hithere"};//People who've helped
@@ -51,6 +52,9 @@ public class Join implements ActionListener {
     }
     private void AddListeners() {
         Return.addActionListener(this);
+        Create.addActionListener(this);
+        Refresh.addActionListener(this);
+        Join.addActionListener(this);
     }
 
     private void gameList(Point size) throws RemoteException {
@@ -86,16 +90,33 @@ public class Join implements ActionListener {
             }
         } else if (s == Create) {
             //cria um novo jogo
-            //new creatGame();
+            new CreateGameLobby();
         } else if (s == Join) {
             int id = gamesList.getSelectedIndex();
             try {
-                Game.session.getGame(id);
-                //falta os observers
+                Game.gameLobby = Game.session.getGame(id);
+                Game.observer = new ObserverImpl(Game.gameLobby);
+                Game.gameLobby.attach(Game.observer);
+                new PlayerSelectionLobby(id);
+
             } catch (RemoteException ex) {
                 throw new RuntimeException(ex);
             }
         }
     }
 
+    @Override
+    public void keyTyped(KeyEvent keyEvent) {
+
+    }
+
+    @Override
+    public void keyPressed(KeyEvent keyEvent) {
+
+    }
+
+    @Override
+    public void keyReleased(KeyEvent keyEvent) {
+
+    }
 }
