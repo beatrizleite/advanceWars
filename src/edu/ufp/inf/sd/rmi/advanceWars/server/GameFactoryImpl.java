@@ -20,10 +20,18 @@ public class GameFactoryImpl extends UnicastRemoteObject implements GameFactoryR
 
     @Override
     public GameSessionRI login(String username, String pwd) throws RemoteException {
+        User user = db.getUser(username);
         if(db.userExists(username)) {
-            GameSessionImpl gameSession = new GameSessionImpl(this.aws, db.getUser(username));
-            System.out.println("We're in GameFactoryImpl and the user "+username+" just logged in!");
-            return gameSession;
+            if(!user.getToken().verify()) {
+                user.getToken().update(username);
+            }
+            if(!db.sessionExists(username)) {
+                GameSessionImpl session = new GameSessionImpl(db, user);
+                System.out.println("We're in GameFactoryImpl and the user "+username+" just logged in!");
+                return session;
+            } else {
+                throw new RemoteException();
+            }
         }
         return null;
     }

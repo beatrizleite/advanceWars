@@ -13,20 +13,29 @@ public class Token {
     private int exp = 60;
     private String token;
     public Token(String user) {
-        this.token = "token";
+        this.issuer = user;
+        this.token = generateToken(issuer);
     }
 
     public Token() {
         this.token = this.generateToken();
     }
 
+    private String generateToken(String issuer) {
+        return JWT.create().withIssuer(this.issuer).withIssuedAt(Date.from(Instant.now())).sign(Algorithm.HMAC256(this.issuer));
+    }
+
     private String generateToken() {
-        return JWT.create().withIssuer(issuer).withIssuedAt(Date.from(Instant.now())).sign(Algorithm.HMAC256(issuer));
+        return JWT.create().withIssuer(this.issuer).withIssuedAt(Date.from(Instant.now())).sign(Algorithm.HMAC256(this.issuer));
     }
 
     public boolean verify() {
         DecodedJWT dec_token = JWT.decode(token);
         return dec_token.getIssuer().equals(issuer);
+    }
+
+    public void update(String issuer) {
+        this.token = generateToken(issuer);
     }
 
 }

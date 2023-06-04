@@ -8,17 +8,16 @@ import java.util.UUID;
 public class GameSessionImpl extends UnicastRemoteObject implements GameSessionRI {
     private DB db;
     private ArrayList<AdvanceWarsRI> games;
-    private AdvanceWarsServer aws;
     private User user;
     private String username;
 
-    protected GameSessionImpl(AdvanceWarsServer aws, User user) throws RemoteException {
+    protected GameSessionImpl(DB db, User user) throws RemoteException {
         super();
         this.games = new ArrayList<>();
-        this.aws = aws;
         this.user = user;
         this.username = user.getName();
         this.db = DB.getInstance();
+        addSession(username, db);
     }
 
     @Override
@@ -34,6 +33,10 @@ public class GameSessionImpl extends UnicastRemoteObject implements GameSessionR
     @Override
     public ArrayList<AdvanceWarsRI> getGames() throws RemoteException {
         return this.db.getGames();
+    }
+
+    private void addSession(String name, DB db) throws RemoteException {
+        this.db.addSession(name, this);
     }
 
     public AdvanceWarsRI getGame(int id) throws RemoteException {
