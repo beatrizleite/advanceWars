@@ -91,7 +91,7 @@ public class AdvanceWarsImpl extends UnicastRemoteObject implements AdvanceWarsR
     public void notifyObs() throws RemoteException {
         for(ObserverRI obs : observers) {
             try {
-                obs.update();
+                obs.updateObsState();
             } catch (RemoteException e) {
                 e.printStackTrace();
             }

@@ -6,14 +6,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class GameFactoryImpl extends UnicastRemoteObject implements GameFactoryRI {
-
+    AdvanceWarsServer aws;
     private DB db;
     private ArrayList<GameSessionRI> sessions;
-    private AdvanceWarsServer aws;
     public GameFactoryImpl(AdvanceWarsServer aws) throws RemoteException {
         super();
-        this.sessions = new ArrayList<>();
         this.aws = aws;
+        this.sessions = new ArrayList<>();
         this.db = DB.getInstance();
     }
 
@@ -26,7 +25,7 @@ public class GameFactoryImpl extends UnicastRemoteObject implements GameFactoryR
                 user.getToken().update(username);
             }
             if(!db.sessionExists(username)) {
-                GameSessionImpl session = new GameSessionImpl(db, user);
+                GameSessionImpl session = new GameSessionImpl(aws, user);
                 System.out.println("We're in GameFactoryImpl and the user "+username+" just logged in!");
                 return session;
             } else {

@@ -30,7 +30,7 @@ public class Join implements ActionListener {
     JButton Refresh = new JButton("Refresh");
 
     public Join() throws RemoteException {
-        Point size = MenuHandler.PrepMenu(400,280);
+        Point size = MenuHandler.PrepMenu(280,280);
         MenuHandler.HideBackground();
         SetBounds(size);
         AddGui();
@@ -38,10 +38,10 @@ public class Join implements ActionListener {
         gameList(size);
     }
     private void SetBounds(Point size) {
-        Create.setBounds(size.x + 100, size.y, 200, 32);
-        Join.setBounds(size.x + 100, size.y + 38, 200, 32);
-        Refresh.setBounds(size.x + 100, size.y + 38 * 2, 200, 32);
-        Return.setBounds(size.x+40, size.y + 38 * 3, 100, 24);
+        Create.setBounds(size.x,size.y+10+38, 200, 32);
+        Join.setBounds(size.x,size.y+10+38*2, 200, 32);
+        Refresh.setBounds(size.x,size.y+10+38*3, 200, 32);
+        Return.setBounds(size.x,size.y+10+38*4, 200, 32);
     }
     private void AddGui() {
         Game.gui.add(Create);

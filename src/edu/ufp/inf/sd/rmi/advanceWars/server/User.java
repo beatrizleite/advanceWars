@@ -14,7 +14,7 @@ public class User extends UnicastRemoteObject {
         super();
         this.name = name;
         this.pwd = pwd;
-        this.token = new Token(name);
+        this.token = new Token();
     }
 
     private boolean checkToken() {

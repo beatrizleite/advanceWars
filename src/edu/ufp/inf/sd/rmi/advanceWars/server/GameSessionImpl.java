@@ -10,9 +10,11 @@ public class GameSessionImpl extends UnicastRemoteObject implements GameSessionR
     private ArrayList<AdvanceWarsRI> games;
     private User user;
     private String username;
+    AdvanceWarsServer aws;
 
-    protected GameSessionImpl(DB db, User user) throws RemoteException {
+    protected GameSessionImpl(AdvanceWarsServer aws, User user) throws RemoteException {
         super();
+        this.aws = aws;
         this.games = new ArrayList<>();
         this.user = user;
         this.username = user.getName();
@@ -46,7 +48,6 @@ public class GameSessionImpl extends UnicastRemoteObject implements GameSessionR
     public AdvanceWarsRI createGame(int players, String map, GameSessionRI gameSessionRI) throws RemoteException {
         ArrayList<AdvanceWarsRI> games;
         AdvanceWarsRI game = new AdvanceWarsImpl(map, username);
-        game.setGameState(new State("waiting"));
         games = this.db.getGames();
         games.add(game);
         this.db.addGame(game);

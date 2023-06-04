@@ -67,6 +67,7 @@ public class Game extends JFrame {
 	public static AdvanceWarsRI gameLobby;
 	public static Game game;
 	public ObserverRI observer;
+	public static String username;
 
 
 	public Game(GameFactoryRI gameFactoryRI) {super (name);

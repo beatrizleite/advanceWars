@@ -31,7 +31,7 @@ public class AdvanceWarsClient extends JFrame {
         this.db= DB.getInstance();
         initContext(args);
         this.lookup();
-        new Game();
+        new Game(gameFactoryRI);
 
         //initObserver(args);
     }
@@ -76,7 +76,7 @@ public class AdvanceWarsClient extends JFrame {
 
     private void initObserver(String args[]) {
         try {
-            observerRI = new ObserverImpl(this.gameSessionRI.getUsername(), this, this.advanceWarsRI);
+            observerRI = new ObserverImpl(this.advanceWarsRI);
         } catch (RemoteException e) {
             Logger.getLogger(AdvanceWarsClient.class.getName()).log(Level.SEVERE, null, e);
         }
