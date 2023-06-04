@@ -15,7 +15,7 @@ import java.awt.font.GlyphMetrics;
 import java.rmi.RemoteException;
 import java.util.Objects;
 
-public class Join implements ActionListener, KeyListener {
+public class Join implements ActionListener {
     String[] titles = {"Dev Team","TITLE HERE","Special Mentions"};
     String[] list1 = {"Serge-David"};//Main Developers
     String[] list2 = {"hithere"};//People who've helped
@@ -97,26 +97,10 @@ public class Join implements ActionListener, KeyListener {
                 Game.gameLobby = Game.session.getGame(id);
                 Game.observer = new ObserverImpl(Game.gameLobby);
                 Game.gameLobby.attach(Game.observer);
-                new PlayerSelectionLobby(id);
-
+                new PlayerSelectionLobby(id);s
             } catch (RemoteException ex) {
                 throw new RuntimeException(ex);
             }
         }
-    }
-
-    @Override
-    public void keyTyped(KeyEvent keyEvent) {
-
-    }
-
-    @Override
-    public void keyPressed(KeyEvent keyEvent) {
-
-    }
-
-    @Override
-    public void keyReleased(KeyEvent keyEvent) {
-
     }
 }

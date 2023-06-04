@@ -7,6 +7,7 @@ import menus.PlayerSelectionLobby;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.Objects;
 
 public class ObserverImpl extends UnicastRemoteObject implements ObserverRI {
     private State obsState;
@@ -48,4 +49,5 @@ public class ObserverImpl extends UnicastRemoteObject implements ObserverRI {
     public String getUsername() throws RemoteException {
         return username;
     }
+
 }

@@ -17,6 +17,7 @@ public class AdvanceWarsImpl extends UnicastRemoteObject implements AdvanceWarsR
     private int curr_players;
     private String map;
     private String firstPlayer;
+    private TokenRing tr;
 
     AdvanceWarsImpl(String map, String firstPlayer) throws RemoteException {
         super();
@@ -84,8 +85,20 @@ public class AdvanceWarsImpl extends UnicastRemoteObject implements AdvanceWarsR
     }
 
     @Override
+    public void setGameState(State state, ObserverRI observer) throws RemoteException {
+        if (this.tr.currentHolder() == this.observers.indexOf(observer)) {
+            this.state = state;
+            this.notifyObs();
+        }
+        if (state.toString().compareTo("endturn") == 0) {
+            this.tr.nextHolder();
+        }
+    }
+
+    @Override
     public void setGameState(State state) throws RemoteException {
         this.state = state;
+        this.notifyObs();
     }
 
     public void notifyObs() throws RemoteException {
