@@ -33,7 +33,8 @@ public class StartMenu implements ActionListener {
 	//Map list
 	public JList maps_list = new JList();
 	DefaultListModel maps_model = new DefaultListModel();
-	
+
+
 	public StartMenu() {
 		Point size = MenuHandler.PrepMenu(400,280);
 		MenuHandler.HideBackground();

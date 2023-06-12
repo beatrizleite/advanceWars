@@ -16,11 +16,6 @@ import java.rmi.RemoteException;
 import java.util.Objects;
 
 public class Join implements ActionListener {
-    String[] titles = {"Dev Team","TITLE HERE","Special Mentions"};
-    String[] list1 = {"Serge-David"};//Main Developers
-    String[] list2 = {"hithere"};//People who've helped
-    String[] list3 = {"Google","Gamers like you"};
-
     JList<String> gamesList;
     JScrollPane gamesPane;
     DefaultListModel<String> gamesModel = new DefaultListModel<>();
@@ -29,6 +24,7 @@ public class Join implements ActionListener {
     JButton Join = new JButton("Join Existing Game");
     JButton Return = new JButton("Return");
     JButton Refresh = new JButton("Refresh");
+
 
     public Join() throws RemoteException {
         Point size = MenuHandler.PrepMenu(280,280);
@@ -70,9 +66,7 @@ public class Join implements ActionListener {
         int max = 0;
         DefaultListModel<String> gameList = new DefaultListModel<>();
         for (AdvanceWarsRI game : Game.session.getGames()) {
-            if (Objects.equals(game.getMap(), "SmallVs")) max=2;
-            else if(Objects.equals(game.getMap(), "FourCorners")) max=4;
-            String g = "Map: " +game.getMap() + "; State: " + game.getState() + "; Players online: " + game.getPlayers() + " out of max of " + max;
+            String g = game.getId() +": "+game.getMap()+"; "+ max;
             gameList.addElement(g);
         }
         return gameList;
@@ -89,15 +83,11 @@ public class Join implements ActionListener {
                 throw new RuntimeException(ex);
             }
         } else if (s == Create) {
-            //cria um novo jogo
             new CreateGameLobby();
         } else if (s == Join) {
-            int id = gamesList.getSelectedIndex();
             try {
-                Game.gameLobby = Game.session.getGame(id);
-                Game.observer = new ObserverImpl(Game.gameLobby);
-                Game.gameLobby.attach(Game.observer);
-                new PlayerSelectionLobby(id);s
+                int id = this.gamesList.getSelectedIndex();
+                new PlayerSelectionLobby(Game.gameLobby.getMap(), Game.session, id);
             } catch (RemoteException ex) {
                 throw new RuntimeException(ex);
             }

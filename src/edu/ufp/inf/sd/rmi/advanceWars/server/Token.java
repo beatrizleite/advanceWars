@@ -16,13 +16,13 @@ public class Token {
     private String token;
 
     public Token(String user) {
-        //this.token = generateToken(user);
-        this.token = user;
+        this.token = generateToken(user);
+        //this.token = user;
     }
 
     public Token() {
-        //this.token = this.generateToken();
-        this.token = issuer;
+        this.token = this.generateToken();
+        //this.token = issuer;
     }
 
     private String generateToken(String issuer) {
@@ -40,11 +40,11 @@ public class Token {
     }
 
     public boolean verify() {
-        /*
+
         DecodedJWT dec_token = JWT.decode(token);
         return dec_token.getIssuer().equals(issuer);
-         */
-        return true;
+
+        //return true;
     }
 
     public void update(String issuer) {

@@ -4,6 +4,8 @@ import edu.ufp.inf.sd.rmi.advanceWars.client.ObserverRI;
 import edu.ufp.inf.sd.rmi.advanceWars.server.AdvanceWarsRI;
 import edu.ufp.inf.sd.rmi.advanceWars.server.GameFactoryRI;
 import edu.ufp.inf.sd.rmi.advanceWars.server.GameSessionRI;
+import menus.MenuHandler;
+import players.Base;
 
 import java.awt.Dimension;
 import java.awt.Image;
@@ -22,7 +24,7 @@ public class Game extends JFrame {
 	public static final String name = "Strategy Game";
 	public static int ScreenBase = 32;//Bit size for the screen, 16 / 32 / 64 / 128
 	public static boolean dev = true;//Is this a dev copy or not... useless? D:
-	
+
 	public static enum State {STARTUP, MENU, PLAYING, EDITOR};
 	public static State GameState = State.STARTUP;
 		
@@ -68,7 +70,7 @@ public class Game extends JFrame {
 	public static Game game;
 	public static ObserverRI observer;
 	public static String username;
-
+	public static int chr;
 
 	public Game(GameFactoryRI gameFactoryRI) {super (name);
 		//Default Settings of the JFrame
@@ -175,6 +177,45 @@ public class Game extends JFrame {
 		}
 	}
 
+	public static void updates(String move) {
+		Base ply = Game.player.get(Game.btl.currentplayer);
+
+		if(move.startsWith("buy")) {
+			String[] args = move.split(" ");
+			btl.Buyunit(Integer.parseInt(args[1]), Integer.parseInt(args[2]), Integer.parseInt(args[3]));
+		}
+		switch (move) {
+			case "up":
+				ply.selecty--;
+				if (ply.selecty < 0) ply.selecty++;
+				break;
+			case "down":
+				ply.selecty++;
+				if( ply.selecty >= Game.map.height) ply.selecty--;
+				break;
+			case "left":
+				ply.selectx--;
+				if (ply.selectx < 0) ply.selectx++;
+				break;
+			case "right":
+				ply.selectx++;
+				if (ply.selectx > Game.map.width) ply.selectx--;
+				break;
+			case "select":
+				Game.btl.Action();
+				break;
+			case "cancel":
+				Game.player.get(Game.btl.currentplayer).Cancle();
+				break;
+			case "start":
+				new menus.Pause();
+				break;
+			case "endturn":
+				MenuHandler.CloseMenu();
+				Game.btl.EndTurn();
+				break;
+		}
+	}
 
 	/**Starts a new game when launched.*/
 	public static void main(String args[]) throws Exception {new Game();}

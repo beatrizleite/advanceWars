@@ -3,51 +3,61 @@ package edu.ufp.inf.sd.rmi.advanceWars.client;
 import edu.ufp.inf.sd.rmi.advanceWars.server.AdvanceWarsRI;
 import edu.ufp.inf.sd.rmi.advanceWars.server.State;
 import engine.Game;
-import menus.PlayerSelectionLobby;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.Objects;
 
 public class ObserverImpl extends UnicastRemoteObject implements ObserverRI {
-    private State obsState;
+    private String user;
+    private int chr;
     private Game game;
     private AdvanceWarsRI gameLobby;
-    private String username;
-    private PlayerSelectionLobby playerSelectionLobby;
+    private State state;
 
-
-    public ObserverImpl(AdvanceWarsRI gameLobby) throws RemoteException {
+    public ObserverImpl(AdvanceWarsRI gameLobby, String user, int chr, Game game) throws RemoteException {
         super();
+        this.user = user;
+        this.chr = chr;
+        this.game = game;
         this.gameLobby = gameLobby;
         this.gameLobby.attach(this);
     }
 
-    @Override
-    public void updateObsState() throws RemoteException {
-        this.obsState = gameLobby.getState();
+    public String getUser() {
+        return user;
     }
 
-    @Override
-    public PlayerSelectionLobby getSelection() throws RemoteException {
-        return playerSelectionLobby;
+    public void setUser(String user) {
+        this.user = user;
     }
 
-    @Override
-    public void setSelection(PlayerSelectionLobby playerSelectionLobby) throws RemoteException {
-        this.playerSelectionLobby = playerSelectionLobby;
+    public int getChr() {
+        return chr;
     }
 
-    public AdvanceWarsRI getGame() {
+    public void setChr(int chr) {
+        this.chr = chr;
+    }
+
+    public Game getGame() {
+        return game;
+    }
+
+    public void setGame(Game game) {
+        this.game = game;
+    }
+
+    public AdvanceWarsRI getGameLobby() {
         return gameLobby;
     }
 
-    private State getObsState() throws RemoteException {
-        return this.obsState;
+    public void setGameLobby(AdvanceWarsRI gameLobby) {
+        this.gameLobby = gameLobby;
     }
 
-    public String getUsername() throws RemoteException {
-        return username;
+    public void update() throws RemoteException {
+        state = gameLobby.getState();
+        System.out.println("Observer state updated: "+ state);
+        Game.updates(state.getState());
     }
-
 }

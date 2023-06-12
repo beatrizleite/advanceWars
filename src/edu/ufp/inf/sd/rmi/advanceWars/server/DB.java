@@ -36,6 +36,7 @@ public class DB extends UnicastRemoteObject {
         this.users.add(u2);
         this.users.add(u3);
 
+        /*
         try {
             AdvanceWarsRI game1 = new AdvanceWarsImpl("SmallVs", t1.getName());
             AdvanceWarsRI game2 = new AdvanceWarsImpl("FourCorners", t2.getName());
@@ -46,7 +47,7 @@ public class DB extends UnicastRemoteObject {
         } catch (RemoteException e) {
             e.printStackTrace();
         }
-
+        */
 
     }
 
@@ -74,6 +75,10 @@ public class DB extends UnicastRemoteObject {
 
     public void removeGame(AdvanceWarsRI game) throws RemoteException{
         games.remove(game.getId());
+    }
+
+    public GameSessionRI getSession(User user) {
+        return this.sessions.get(user);
     }
 
     public AdvanceWarsRI getGame(int id) {
@@ -115,13 +120,4 @@ public class DB extends UnicastRemoteObject {
         return false;
     }
 
-    public void listAllGames() throws RemoteException {
-        ArrayList<AdvanceWarsRI> allGames = db.getGames();
-        for (int i = 0; i < allGames.size(); i++) {
-            AdvanceWarsRI game = allGames.get(i);
-            System.out.print("Game "+i+", ID "+game.getId()+
-                    ", Players "+game.getPlayers()+
-                    ", Map "+ game.getMap()+"\n");
-        }
-    }
 }

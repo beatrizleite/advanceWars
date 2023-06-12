@@ -9,23 +9,24 @@ public class GameFactoryImpl extends UnicastRemoteObject implements GameFactoryR
     AdvanceWarsServer aws;
     private DB db;
     private ArrayList<GameSessionRI> sessions;
-    public GameFactoryImpl(AdvanceWarsServer aws) throws RemoteException {
+    public GameFactoryImpl() throws RemoteException {
         super();
-        this.aws = aws;
         this.sessions = new ArrayList<>();
         this.db = DB.getInstance();
     }
 
-
     @Override
     public GameSessionRI login(String username, String pwd) throws RemoteException {
-        User user = db.getUser(username);
         if(db.userExists(username)) {
+            User user = db.getUser(username);
+            if(db.sessionExists(username)) {
+                throw new RemoteException("User is already logged in!");
+            }
             if(!user.getToken().verify()) {
                 user.getToken().update(username);
             }
             if(!db.sessionExists(username)) {
-                GameSessionImpl session = new GameSessionImpl(aws, user);
+                GameSessionImpl session = new GameSessionImpl(this, user);
                 System.out.println("We're in GameFactoryImpl and the user "+username+" just logged in!");
                 return session;
             } else {
@@ -41,18 +42,13 @@ public class GameFactoryImpl extends UnicastRemoteObject implements GameFactoryR
         return db.register(username, pwd);
     }
 
-    @Override
-    public ArrayList<GameSessionRI> getSessions() throws RemoteException {
-        return sessions;
+    private GameSessionRI newSession(User user) throws RemoteException {
+        return new GameSessionImpl(this, user);
     }
 
-    @Override
-    public void setSession(ArrayList<GameSessionRI> sessions) throws RemoteException {
-        this.sessions = sessions;
+    private GameSessionRI getSession(User user) {
+        return db.getSession(user);
     }
 
-    protected void removeSession(String username) throws RemoteException {
-        this.sessions.remove(username);
-        System.out.println("We're in GameFactoryImpl and the user "+username+" just logged out!");
-    }
+
 }

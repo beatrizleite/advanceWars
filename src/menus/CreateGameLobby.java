@@ -10,6 +10,7 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.rmi.RemoteException;
 
+
 public class CreateGameLobby implements ActionListener {
     public JButton map1 = new JButton("SmallVs(2 players)");
     public JButton map2 = new JButton("FourCorners(4 players)");
@@ -46,20 +47,13 @@ public class CreateGameLobby implements ActionListener {
         Object s = actionEvent.getSource();
         if (s == map1) {
             try {
-                Game.gameLobby = Game.session.createGame("SmallVs", Game.session);
-                int id = Game.session.getGames().indexOf(Game.gameLobby);
-                Game.observer = new ObserverImpl(Game.gameLobby);
-                Game.gameLobby.attach(Game.observer);
-                new PlayerSelection("SmallVs");
+                new PlayerSelectionLobby("SmallVs", Game.session, null);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         } else if (s == map2) {
             try {
-                Game.gameLobby = Game.session.createGame("FourCorners", Game.session);
-                Game.observer = new ObserverImpl(Game.gameLobby);
-                Game.gameLobby.attach(Game.observer);
-                new PlayerSelectionLobby(Game.session.getGames().indexOf(Game.gameLobby));
+                new PlayerSelectionLobby("FourCorners", Game.session, null);
             } catch (RemoteException e) {
                 throw new RuntimeException(e);
             }

@@ -66,14 +66,6 @@ public class AdvanceWarsClient extends JFrame {
         }
     }
 
-    private void initObserver(String args[]) {
-        try {
-            observerRI = new ObserverImpl(this.advanceWarsRI);
-        } catch (RemoteException e) {
-            Logger.getLogger(AdvanceWarsClient.class.getName()).log(Level.SEVERE, null, e);
-        }
-    }
-
     public static void main(String[] args) {
         try {
             new AdvanceWarsClient(args).setVisible(true);

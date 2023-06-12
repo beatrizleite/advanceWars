@@ -8,7 +8,5 @@ import java.util.HashMap;
 public interface GameFactoryRI extends Remote {
     public GameSessionRI login(String username, String pwd) throws RemoteException;
     public boolean register(String username, String pwd) throws RemoteException;
-    ArrayList<GameSessionRI> getSessions() throws RemoteException;
-    void setSession(ArrayList<GameSessionRI> sessions) throws RemoteException;
 
 }
