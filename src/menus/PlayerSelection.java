@@ -3,6 +3,7 @@ package menus;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.rmi.RemoteException;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -75,10 +76,15 @@ public class PlayerSelection implements ActionListener {
 			Game.gui.LoginScreen();
 		}
 		else if(s == ThunderbirdsAreGo) {
-			MenuHandler.CloseMenu();
-			Game.btl.NewGame(mapname, null, null, null, 0);
-			Game.btl.AddCommanders(plyer, npc, 100, 50);
-			Game.gui.InGameScreen();
+			try {
+				MenuHandler.CloseMenu();
+				Game.btl.NewGame(mapname, null);
+				Game.btl.AddCommanders(plyer, npc, 100, 50);
+				Game.gui.InGameScreen();
+			} catch (RemoteException ex) {
+				ex.printStackTrace();
+			}
+
 		}
 		for (int i = 0; i < 4; i++) {
 			if (s == Prev[i]) {

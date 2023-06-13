@@ -25,6 +25,8 @@ public class Game extends JFrame {
 	public static int ScreenBase = 32;//Bit size for the screen, 16 / 32 / 64 / 128
 	public static boolean dev = true;//Is this a dev copy or not... useless? D:
 
+
+
 	public static enum State {STARTUP, MENU, PLAYING, EDITOR};
 	public static State GameState = State.STARTUP;
 		
@@ -217,6 +219,21 @@ public class Game extends JFrame {
 		}
 	}
 
+	public void startGame(AdvanceWarsRI gameLobby) throws RemoteException {
+		boolean[] npc = {false, false, false, false};
+		int[] chrs = new int[4];
+		AdvanceWarsRI game = session.getGame(gameLobby.getId());
+		List<ObserverRI> observers = game.getObs();
+		int i = 0;
+		for (ObserverRI obs : observers) {
+			chrs[i] = obs.getChr();
+			i++;
+		}
+		MenuHandler.CloseMenu();
+		Game.btl.NewGame(game.getMap(), game.getId());
+		Game.btl.AddCommanders(chrs,npc,100,50);
+		Game.gui.InGameScreen();
+	}
 	/**Starts a new game when launched.*/
 	public static void main(String args[]) throws Exception {new Game();}
 }

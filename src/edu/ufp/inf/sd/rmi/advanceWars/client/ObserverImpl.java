@@ -25,35 +25,35 @@ public class ObserverImpl extends UnicastRemoteObject implements ObserverRI {
         this.gameLobby.attach(this);
     }
 
-    public String getUser() {
+    public String getUser() throws RemoteException {
         return user;
     }
 
-    public void setUser(String user) {
+    public void setUser(String user) throws RemoteException {
         this.user = user;
     }
 
-    public int getChr() {
+    public int getChr()  throws RemoteException {
         return chr;
     }
 
-    public void setChr(int chr) {
+    public void setChr(int chr)  throws RemoteException{
         this.chr = chr;
     }
 
-    public Game getGame() {
+    public Game getGame()  throws RemoteException{
         return game;
     }
 
-    public void setGame(Game game) {
+    public void setGame(Game game) throws RemoteException {
         this.game = game;
     }
 
-    public AdvanceWarsRI getGameLobby() {
+    public AdvanceWarsRI getGameLobby() throws RemoteException {
         return gameLobby;
     }
 
-    public void setGameLobby(AdvanceWarsRI gameLobby) {
+    public void setGameLobby(AdvanceWarsRI gameLobby) throws RemoteException {
         this.gameLobby = gameLobby;
     }
 
@@ -63,7 +63,12 @@ public class ObserverImpl extends UnicastRemoteObject implements ObserverRI {
         Game.updates(state.getState());
     }
 
-    public void setBattle(Battle btl) {
+    public void setBattle(Battle btl)  throws RemoteException{
         this.btl = btl;
+    }
+
+    @Override
+    public void startGame() throws RemoteException {
+        game.startGame(this.gameLobby);
     }
 }

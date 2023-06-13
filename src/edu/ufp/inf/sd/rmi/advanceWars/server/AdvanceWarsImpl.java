@@ -5,22 +5,26 @@ import edu.ufp.inf.sd.rmi.advanceWars.client.ObserverRI;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.UUID;
 
 public class AdvanceWarsImpl extends UnicastRemoteObject implements AdvanceWarsRI {
     private State state;
-    private ArrayList<ObserverRI> observers = new ArrayList<>();
+    private List<ObserverRI> observers;
     private UUID id;
     private String map;
     private String username;
     private int max;
     private boolean running;
+    private TokenRing tokenRing;
 
     public AdvanceWarsImpl(String map, String username) throws RemoteException {
         super();
         this.id = UUID.randomUUID();
         this.map = map;
         this.username = username;
+        this.observers = Collections.synchronizedList(new ArrayList<>());
         if (this.map.compareTo("SmallVs") == 0) {
             this.max = 2;
         } else if (this.map.compareTo("FourCorners") == 0) {
@@ -38,13 +42,35 @@ public class AdvanceWarsImpl extends UnicastRemoteObject implements AdvanceWarsR
     }
 
     @Override
+    public List<ObserverRI> getObs() throws RemoteException {
+        return observers;
+    }
+
+    @Override
     public void attach(ObserverRI observerRI) throws RemoteException {
-        if(!this.observers.contains(observerRI)) observers.add(observerRI);
+        if(this.howManyPlayers() < max && !this.getObs().contains(observerRI)) {
+            this.getObs().add(observerRI);
+        }
+        if (this.howManyPlayers() == max) {
+            startGame();
+        }
+    }
+
+    @Override
+    public void startGame() throws RemoteException {
+        this.tokenRing = new TokenRing(max);
+        for (ObserverRI obs : this.observers) {
+            try {
+                obs.startGame();
+            } catch (RemoteException ex) {
+                ex.printStackTrace();
+            }
+        }
     }
 
     @Override
     public void detach(ObserverRI observerRI) throws RemoteException {
-        observers.remove(observerRI);
+        this.getObs().remove(observerRI);
     }
 
     @Override
@@ -79,12 +105,12 @@ public class AdvanceWarsImpl extends UnicastRemoteObject implements AdvanceWarsR
     }
 
     @Override
-    public String getMap() {
-        return map;
+    public String getMap() throws RemoteException {
+        return this.map;
     }
 
     @Override
-    public void setMap(String map) {
+    public void setMap(String map) throws RemoteException{
         this.map = map;
     }
 

@@ -10,22 +10,23 @@ import java.rmi.server.UnicastRemoteObject;
 
 public interface ObserverRI extends Remote {
 
-        public String getUser();
+        public String getUser() throws RemoteException;
 
-        public void setUser(String user);
+        public void setUser(String user) throws RemoteException;
 
-        public int getChr();
+        public int getChr() throws RemoteException;
 
-        public void setChr(int chr);
+        public void setChr(int chr) throws RemoteException;
 
-        public Game getGame();
+        public Game getGame() throws RemoteException;
 
-        public void setGame(Game game);
+        public void setGame(Game game) throws RemoteException;
 
-        public AdvanceWarsRI getGameLobby();
-        public void setGameLobby(AdvanceWarsRI gameLobby);
+        public AdvanceWarsRI getGameLobby() throws RemoteException;
+        public void setGameLobby(AdvanceWarsRI gameLobby) throws RemoteException;
 
         void update() throws RemoteException;
 
-        void setBattle(Battle btl);
+        void setBattle(Battle btl) throws RemoteException;
+        void startGame() throws RemoteException;
 }

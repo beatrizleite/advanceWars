@@ -58,7 +58,7 @@ public class InputHandler implements KeyListener,MouseListener,ActionListener {
 		if (i==exit) {System.exit(0);}
 		if (Game.GameState==Game.State.PLAYING) {
 			players.Base ply = Game.player.get(Game.btl.currentplayer);
-			AdvanceWarsRI game = Game.btl.getGame();
+			AdvanceWarsRI game = Game.gameLobby;
 
 			try {
 				if (i==up) {game.setGameState(new State(Game.btl.getGameId(), "up"));}

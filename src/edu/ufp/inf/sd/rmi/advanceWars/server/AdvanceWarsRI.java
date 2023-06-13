@@ -4,6 +4,7 @@ import edu.ufp.inf.sd.rmi.advanceWars.client.ObserverRI;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
+import java.util.List;
 import java.util.UUID;
 
 public interface AdvanceWarsRI extends Remote {
@@ -15,11 +16,12 @@ public interface AdvanceWarsRI extends Remote {
     void setId(UUID id) throws RemoteException;
     void notifyObs() throws RemoteException;
     int getObsId(String user) throws RemoteException;
-
-    String getMap();
-    void setMap(String map);
-
+    String getMap() throws RemoteException;
+    void setMap(String map) throws RemoteException;
     boolean isFull() throws RemoteException;
     boolean isRunning() throws RemoteException;
     int howManyPlayers() throws RemoteException;
-}
+    List<ObserverRI> getObs() throws RemoteException;
+    void startGame() throws RemoteException;
+
+    }

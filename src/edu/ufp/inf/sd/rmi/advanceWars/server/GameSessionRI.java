@@ -15,6 +15,5 @@ public interface GameSessionRI extends Remote {
     AdvanceWarsRI createGame(String map, GameSessionRI gameSessionRI) throws RemoteException;
     void removeGame(AdvanceWarsRI game) throws RemoteException;
     void logout() throws RemoteException;
-
     void leaveGame(UUID id, ObserverRI observer) throws RemoteException;
 }
