@@ -13,20 +13,20 @@ public class AdvanceWarsImpl extends UnicastRemoteObject implements AdvanceWarsR
     private UUID id;
     private String map;
     private String username;
-
-    public String getMap() {
-        return map;
-    }
-
-    public void setMap(String map) {
-        this.map = map;
-    }
+    private int max;
+    private boolean running;
 
     public AdvanceWarsImpl(String map, String username) throws RemoteException {
         super();
         this.id = UUID.randomUUID();
         this.map = map;
         this.username = username;
+        if (this.map.compareTo("SmallVs") == 0) {
+            this.max = 2;
+        } else if (this.map.compareTo("FourCorners") == 0) {
+            this.max = 4;
+        }
+        this.running = false;
     }
 
     public UUID getId() throws RemoteException {
@@ -55,7 +55,7 @@ public class AdvanceWarsImpl extends UnicastRemoteObject implements AdvanceWarsR
     @Override
     public void setGameState(State state) throws RemoteException {
         this.state = state;
-        this.notifyObs();
+        notifyObs();
     }
 
     public void notifyObs() throws RemoteException {
@@ -77,5 +77,31 @@ public class AdvanceWarsImpl extends UnicastRemoteObject implements AdvanceWarsR
         }
         return 0;
     }
+
+    @Override
+    public String getMap() {
+        return map;
+    }
+
+    @Override
+    public void setMap(String map) {
+        this.map = map;
+    }
+
+    @Override
+    public boolean isFull() throws RemoteException {
+        return this.observers.size() >= this.max;
+    }
+
+    @Override
+    public boolean isRunning() throws RemoteException {
+        return this.running;
+    }
+
+    @Override
+    public int howManyPlayers() {
+        return observers.size();
+    }
+
 
 }

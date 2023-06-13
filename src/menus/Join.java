@@ -1,6 +1,7 @@
 package menus;
 
 import edu.ufp.inf.sd.rmi.advanceWars.client.ObserverImpl;
+import edu.ufp.inf.sd.rmi.advanceWars.server.AdvanceWarsImpl;
 import engine.Game;
 import edu.ufp.inf.sd.rmi.advanceWars.server.AdvanceWarsRI;
 import edu.ufp.inf.sd.rmi.advanceWars.server.User;
@@ -13,7 +14,10 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.font.GlyphMetrics;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Objects;
+import java.util.UUID;
 
 public class Join implements ActionListener {
     JList<String> gamesList;
@@ -24,6 +28,8 @@ public class Join implements ActionListener {
     JButton Join = new JButton("Join Existing Game");
     JButton Return = new JButton("Return");
     JButton Refresh = new JButton("Refresh");
+
+    private ArrayList<AdvanceWarsRI> games = new ArrayList<>();
 
 
     public Join() throws RemoteException {
@@ -65,7 +71,10 @@ public class Join implements ActionListener {
     DefaultListModel<String> getGames() throws RemoteException {
         int max = 0;
         DefaultListModel<String> gameList = new DefaultListModel<>();
+        int i = 0;
         for (AdvanceWarsRI game : Game.session.getGames()) {
+            this.games.add(i, game);
+            i++;
             String g = game.getId() +": "+game.getMap()+"; "+ max;
             gameList.addElement(g);
         }
@@ -86,8 +95,17 @@ public class Join implements ActionListener {
             new CreateGameLobby();
         } else if (s == Join) {
             try {
-                int id = this.gamesList.getSelectedIndex();
-                new PlayerSelectionLobby(Game.gameLobby.getMap(), Game.session, id);
+                int chosen = gamesList.getSelectedIndex();
+                UUID id = this.games.get(chosen).getId();
+                AdvanceWarsRI gameLobby = Game.session.getGame(id);
+                if (!gameLobby.isFull() && !gameLobby.isRunning()) {
+                    Game.gameLobby = Game.session.getGame(id);
+                    Game.observer = new ObserverImpl(Game.gameLobby, Game.username, Game.chr, Game.game);
+                    Game.gameLobby.attach(Game.observer);
+                    new PlayerSelectionLobby(Game.gameLobby.getMap(), id);
+                } else {
+                    Game.error.ShowError("Lobby is already full!");
+                }
             } catch (RemoteException ex) {
                 throw new RuntimeException(ex);
             }

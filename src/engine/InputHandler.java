@@ -1,11 +1,15 @@
 package engine;
 
+import edu.ufp.inf.sd.rmi.advanceWars.server.AdvanceWarsRI;
+import edu.ufp.inf.sd.rmi.advanceWars.server.State;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.rmi.RemoteException;
 
 /**
  * Keyboard handling for the game along with the mouse setup for game handling.
@@ -54,14 +58,21 @@ public class InputHandler implements KeyListener,MouseListener,ActionListener {
 		if (i==exit) {System.exit(0);}
 		if (Game.GameState==Game.State.PLAYING) {
 			players.Base ply = Game.player.get(Game.btl.currentplayer);
+			AdvanceWarsRI game = Game.btl.getGame();
+
+			try {
+				if (i==up) {game.setGameState(new State(Game.btl.getGameId(), "up"));}
+				else if (i==down) {game.setGameState(new State(Game.btl.getGameId(), "down"));}
+				else if (i==left) {game.setGameState(new State(Game.btl.getGameId(), "left"));}
+				else if (i==right) {game.setGameState(new State(Game.btl.getGameId(), "right"));}
+				else if (i==select) {game.setGameState(new State(Game.btl.getGameId(), "select"));}
+				else if (i==cancel) {game.setGameState(new State(Game.btl.getGameId(), "cancel"));}
+				else if (i==start) {game.setGameState(new State(Game.btl.getGameId(), "start"));}
+			} catch(RemoteException ex) {
+				ex.printStackTrace();
+			}
 			
-			if (i==up) {ply.selecty--;if (ply.selecty<0) {ply.selecty++;}}
-			else if (i==down) {ply.selecty++;if (ply.selecty>=Game.map.height) {ply.selecty--;}}
-			else if (i==left) {ply.selectx--;if (ply.selectx<0) {ply.selectx++;}}
-			else if (i==right) {ply.selectx++;if (ply.selectx>=Game.map.width) {ply.selectx--;}}
-			else if (i==select) {Game.btl.Action();}
-			else if (i==cancel) {Game.player.get(Game.btl.currentplayer).Cancle();}
-			else if (i==start) {new menus.Pause();}
+
 		}
 		if (Game.GameState==Game.State.EDITOR) {
 			if (i==up) {Game.edit.selecty--;if (Game.edit.selecty<0) {Game.edit.selecty++;} Game.edit.moved = true;}

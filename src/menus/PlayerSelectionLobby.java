@@ -1,17 +1,20 @@
 package menus;
 
-import edu.ufp.inf.sd.rmi.advanceWars.client.ObserverImpl;
-import edu.ufp.inf.sd.rmi.advanceWars.server.AdvanceWarsImpl;
-import edu.ufp.inf.sd.rmi.advanceWars.server.AdvanceWarsRI;
-import edu.ufp.inf.sd.rmi.advanceWars.server.GameSessionRI;
-import engine.Game;
-
-import javax.swing.*;
-import java.awt.*;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 import java.util.UUID;
+
+import javax.swing.JButton;
+import javax.swing.JLabel;
+
+import edu.ufp.inf.sd.rmi.advanceWars.server.AdvanceWarsImpl;
+import edu.ufp.inf.sd.rmi.advanceWars.server.AdvanceWarsRI;
+import edu.ufp.inf.sd.rmi.advanceWars.server.GameSessionRI;
+import edu.ufp.inf.sd.rmi.advanceWars.server.State;
+import engine.Game;
 
 /**
  * This deals with player and battle options setup (might split it) such as npc, team, commander, starting money, turn money, fog, etc.
@@ -19,7 +22,6 @@ import java.util.UUID;
  * @version 0.2
  */
 public class PlayerSelectionLobby implements ActionListener {
-
 	//Commander Selection
 	JButton[] Prev = {new JButton("Prev"),new JButton("Prev"),new JButton("Prev"),new JButton("Prev")};
 	JButton[] Next = {new JButton("Next"),new JButton("Next"),new JButton("Next"),new JButton("Next")};
@@ -35,42 +37,31 @@ public class PlayerSelectionLobby implements ActionListener {
 	JButton StartMoney = new JButton ("$ 100");int start = 100;
 	JButton CityMoney = new JButton ("$ 50");int city = 50;
 	JButton ThunderbirdsAreGo = new JButton ("Start");
-
+	UUID id;
 	String mapname;
-	GameSessionRI session;
-	UUID uuid;
-	ObserverImpl observer;
-	AdvanceWarsRI game;
-	int id;
+	int player;
+	String username;
 
-
-	public PlayerSelectionLobby(String map, GameSessionRI session, UUID id) throws RemoteException {
-
-		try {
-			if (id == null) {
-				UUID new_id = UUID.randomUUID();
-				game.setId(new_id);
-
-			} else {
-
-			}
-		} catch (RemoteException e) {
-			e.printStackTrace();
-		}
-
+	public PlayerSelectionLobby(String map, UUID id) throws RemoteException {
 		mapname = map;
+		this.id = id;
+		this.player = Game.gameLobby.getObsId(Game.username);
+		this.username = Game.username;
+		npc[player] = false;
+
 		Point size = MenuHandler.PrepMenu(400,200);
-		for (int i = 0; i < 4; i++) {
+
+		for (int i = 0; i < 1; i++) {
 			Prev[i].addActionListener(this);
-			Prev[i].setBounds(size.x+10+84*i, size.y+10, 64, 32);
+			Prev[i].setBounds(size.x + 10 + 84 * i, size.y + 10, 64, 32);
 			Game.gui.add(Prev[i]);
 			Next[i].addActionListener(this);
-			Next[i].setBounds(size.x+10+84*i, size.y+100, 64, 32);
+			Next[i].setBounds(size.x + 10 + 84 * i, size.y + 100, 64, 32);
 			Game.gui.add(Next[i]);
 			ManOrMachine[i].addActionListener(this);
-			ManOrMachine[i].setBounds(size.x+12+84*i, size.y+68, 58, 24);
+			ManOrMachine[i].setBounds(size.x + 12 + 84 * i, size.y + 68, 58, 24);
 			Game.gui.add(ManOrMachine[i]);
-			Name[i].setBounds(size.x+10+84*i, size.y+40, 64, 32);
+			Name[i].setBounds(size.x + 10 + 84 * i, size.y + 40, 64, 32);
 			Game.gui.add(Name[i]);
 		}
 		SetBounds(size);
@@ -81,35 +72,41 @@ public class PlayerSelectionLobby implements ActionListener {
 		ThunderbirdsAreGo.setBounds(size.x+200, size.y+170, 100, 24);
 		Return.setBounds(size.x+20, size.y+170, 100, 24);
 	}
-	private void AddGui() throws RemoteException {
+	private void AddGui() {
 		Return.addActionListener(this);
 		Game.gui.add(ThunderbirdsAreGo);
+		try {
+			//o commander pode iniciar o jogo
+			if (Game.gameLobby.getObsId(username) == 0) {
+				Game.gui.add(ThunderbirdsAreGo);
+			}
+		} catch (RemoteException e) {
+			throw new RuntimeException(e);
+		}
 		Game.gui.add(Return);
 	}
 	private void AddListeners() {
 		ThunderbirdsAreGo.addActionListener(this);
 		Return.addActionListener(this);
 	}
-	
+
 	@Override public void actionPerformed(ActionEvent e) {
 		Object s = e.getSource();
 		if (s == Return) {
-			if(Game.gameLobby != null) {
-				try {
-					Game.session.removeGame(Game.gameLobby);
-				} catch (RemoteException ex) {
-					throw new RuntimeException(ex);
-				}
-				try {
+			try{
+				if (Game.gameLobby != null) {
+					if (Game.gameLobby.howManyPlayers() == 1) {
+						AdvanceWarsRI game = Game.session.getGame(id);
+						Game.session.removeGame(game);
+					}
 					Game.gameLobby.detach(Game.observer);
-				} catch (RemoteException ex) {
-					throw new RuntimeException(ex);
 				}
+			} catch (RemoteException ex) {
+				throw new RuntimeException(ex);
 			}
 			Game.gameLobby = null;
 			Game.observer = null;
 			MenuHandler.CloseMenu();
-			//Game.gui.LoginScreen();
 			try {
 				new Join();
 			} catch (RemoteException ex) {
@@ -117,29 +114,23 @@ public class PlayerSelectionLobby implements ActionListener {
 			}
 		}
 		else if(s == ThunderbirdsAreGo) {
-
-
+			new WaitingRoom(id);
 		}
-		for (int i = 0; i < 4; i++) {
+		for (int i = 0; i < 1; i++) {
 			if (s == Prev[i]) {
 				plyer[i]--;
-				if (plyer[i] < 0) {
-					plyer[i] = Game.displayC.size() - 1;
-				}
+				if (plyer[i]<0) {plyer[i]=Game.displayC.size()-1;}
 				Name[i].setText(Game.displayC.get(plyer[i]).name);
-			} else if (s == Next[i]) {
+				Game.chr = plyer[i];
+			}
+			else if (s == Next[i]) {
 				plyer[i]++;
-				if (plyer[i] > Game.displayC.size() - 1) {
-					plyer[i] = 0;
-				}
+				if (plyer[i]>Game.displayC.size()-1) {plyer[i]=0;}
 				Name[i].setText(Game.displayC.get(plyer[i]).name);
-			} else if (s == ManOrMachine[i]) {
-				npc[i] = !npc[i];
-				if (npc[i]) {
-					ManOrMachine[i].setText("NPC");
-				} else {
-					ManOrMachine[i].setText("PLY");
-				}
+				Game.chr = plyer[i];
+			}
+			else if (s == ManOrMachine[i]) {
+				ManOrMachine[i].setText("PLY");
 			}
 		}
 	}

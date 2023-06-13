@@ -9,6 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.rmi.RemoteException;
+import java.util.UUID;
 
 
 public class CreateGameLobby implements ActionListener {
@@ -47,13 +48,21 @@ public class CreateGameLobby implements ActionListener {
         Object s = actionEvent.getSource();
         if (s == map1) {
             try {
-                new PlayerSelectionLobby("SmallVs", Game.session, null);
+                Game.gameLobby = Game.session.createGame("SmallVs", Game.session);
+                UUID id = Game.gameLobby.getId();
+                Game.observer = new ObserverImpl(Game.gameLobby, Game.username, Game.chr, Game.game);
+                Game.gameLobby.attach(Game.observer);
+                new PlayerSelectionLobby("SmallVs", id);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         } else if (s == map2) {
             try {
-                new PlayerSelectionLobby("FourCorners", Game.session, null);
+                Game.gameLobby = Game.session.createGame("FourCorners", Game.session);
+                UUID id = Game.gameLobby.getId();
+                Game.observer = new ObserverImpl(Game.gameLobby, Game.username, Game.chr, Game.game);
+                Game.gameLobby.attach(Game.observer);
+                new PlayerSelectionLobby("FourCorners", id);
             } catch (RemoteException e) {
                 throw new RuntimeException(e);
             }

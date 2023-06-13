@@ -12,7 +12,7 @@ public class DB extends UnicastRemoteObject {
     private final HashMap<String, GameSessionRI> sessions;
     //private final HashMap<Integer, GameSessionRI> sessionTokens;
     //private final HashMap<String, ObserverRI> observers;
-    private final HashMap<UUID,AdvanceWarsRI> games;
+    private final HashMap<UUID, AdvanceWarsRI> games;
 
     public DB() throws RemoteException {
         super();
@@ -81,7 +81,7 @@ public class DB extends UnicastRemoteObject {
         return this.sessions.get(user);
     }
 
-    public AdvanceWarsRI getGame(int id) {
+    public AdvanceWarsRI getGame(UUID id) {
         return games.get(id);
     }
 

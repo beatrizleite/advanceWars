@@ -3,10 +3,11 @@ package edu.ufp.inf.sd.rmi.advanceWars.server;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.UUID;
 
 public class State implements Serializable {
     private String state;
-    private String id;
+    private UUID id;
 
     public String getState() {
         return state;
@@ -16,17 +17,21 @@ public class State implements Serializable {
         this.state = state;
     }
 
-    public String getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
-    public State(String id, String state) {
+    public State(UUID id, String state) {
         this.state = state;
         this.id = id;
+    }
+
+    public State(String state) {
+        this.state = state;
     }
 
 

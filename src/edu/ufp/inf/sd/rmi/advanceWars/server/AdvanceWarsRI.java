@@ -18,4 +18,8 @@ public interface AdvanceWarsRI extends Remote {
 
     String getMap();
     void setMap(String map);
+
+    boolean isFull() throws RemoteException;
+    boolean isRunning() throws RemoteException;
+    int howManyPlayers() throws RemoteException;
 }

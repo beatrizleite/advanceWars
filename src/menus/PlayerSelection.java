@@ -76,7 +76,7 @@ public class PlayerSelection implements ActionListener {
 		}
 		else if(s == ThunderbirdsAreGo) {
 			MenuHandler.CloseMenu();
-			Game.btl.NewGame(mapname);
+			Game.btl.NewGame(mapname, null, null, null, 0);
 			Game.btl.AddCommanders(plyer, npc, 100, 50);
 			Game.gui.InGameScreen();
 		}

@@ -1,8 +1,13 @@
 package engine;
 
+import edu.ufp.inf.sd.rmi.advanceWars.client.ObserverImpl;
+import edu.ufp.inf.sd.rmi.advanceWars.server.AdvanceWarsRI;
+import edu.ufp.inf.sd.rmi.advanceWars.server.State;
 import menus.MenuHandler;
 
+import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.UUID;
 
 /**Put the game stuff in here so all I have to do is end/start this to make a game work or not.*/
 public class Battle {
@@ -21,8 +26,29 @@ public class Battle {
 	
 	//Winning condition settings
 	public int playersleft = 1;
+
+	private AdvanceWarsRI game;
+	private int playerid;
+	private UUID gameid;
+
+	public AdvanceWarsRI getGame() {
+		return game;
+	}
+
+	public UUID getGameId() {
+		return gameid;
+	}
+
+	public int getPlayerId() {
+		return playerid;
+	}
 	
-	public void NewGame(String mapname) {
+	public void NewGame(String mapname, UUID gameid, ObserverImpl observer, AdvanceWarsRI game, int playerid) {
+		observer.setBattle(this);
+		this.gameid = gameid;
+		this.game = game;
+		this.playerid = playerid;
+
 		Game.player = new ArrayList<players.Base>();
 		Game.builds = new ArrayList<buildings.Base>();
 		Game.units = new ArrayList<units.Base>();
@@ -50,6 +76,15 @@ public class Battle {
 	}
 
 	public void EndTurn() {
+		if(Game.btl.currentplayer != Game.btl.getPlayerId()) {
+			return;
+		}
+		try {
+			game.setGameState(new State(gameid, "endturn"));
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
+		MenuHandler.CloseMenu();
 		players.Base ply = Game.player.get(currentplayer);
 		for (units.Base unit : Game.units) {
 			unit.acted=false;
@@ -80,7 +115,7 @@ public class Battle {
 	
 	public void Action() {
 		players.Base ply = Game.player.get(currentplayer);
-		if (ply.npc) {return;}
+		//if (ply.npc) {return;}
 		if (ply.unitselected) {
 			if (currentplayer==Game.units.get(ply.selectedunit).owner) {//Action
 				if (Game.units.get(ply.selectedunit).moved&&!Game.units.get(ply.selectedunit).acted) {
@@ -110,6 +145,14 @@ public class Battle {
 		}
 	}*/
 	public void Buyunit(int type, int x, int y) {
+		if(Game.btl.currentplayer != Game.btl.getPlayerId()) {
+			return;
+		}
+		try {
+			game.setGameState(new State(gameid, "buy "+type+" "+x+" "+y));
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
 		MenuHandler.CloseMenu();
 		double cost = Game.displayU.get(type).cost*Game.player.get(currentplayer).CostBonus;
 		if (Game.player.get(currentplayer).money>=cost) {

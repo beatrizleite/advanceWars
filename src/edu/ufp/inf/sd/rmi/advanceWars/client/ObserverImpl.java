@@ -2,6 +2,7 @@ package edu.ufp.inf.sd.rmi.advanceWars.client;
 
 import edu.ufp.inf.sd.rmi.advanceWars.server.AdvanceWarsRI;
 import edu.ufp.inf.sd.rmi.advanceWars.server.State;
+import engine.Battle;
 import engine.Game;
 
 import java.rmi.RemoteException;
@@ -13,6 +14,7 @@ public class ObserverImpl extends UnicastRemoteObject implements ObserverRI {
     private Game game;
     private AdvanceWarsRI gameLobby;
     private State state;
+    private Battle btl;
 
     public ObserverImpl(AdvanceWarsRI gameLobby, String user, int chr, Game game) throws RemoteException {
         super();
@@ -59,5 +61,9 @@ public class ObserverImpl extends UnicastRemoteObject implements ObserverRI {
         state = gameLobby.getState();
         System.out.println("Observer state updated: "+ state);
         Game.updates(state.getState());
+    }
+
+    public void setBattle(Battle btl) {
+        this.btl = btl;
     }
 }
