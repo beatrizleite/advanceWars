@@ -76,7 +76,6 @@ public class PlayerSelectionLobby implements ActionListener {
 		Return.addActionListener(this);
 		Game.gui.add(ThunderbirdsAreGo);
 		try {
-			//o commander pode iniciar o jogo
 			if (Game.gameLobby.getObsId(username) == 0) {
 				Game.gui.add(ThunderbirdsAreGo);
 			}

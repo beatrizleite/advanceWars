@@ -61,13 +61,13 @@ public class InputHandler implements KeyListener,MouseListener,ActionListener {
 			AdvanceWarsRI game = Game.gameLobby;
 
 			try {
-				if (i==up) {game.setGameState(new State(Game.btl.getGameId(), "up"));}
-				else if (i==down) {game.setGameState(new State(Game.btl.getGameId(), "down"));}
-				else if (i==left) {game.setGameState(new State(Game.btl.getGameId(), "left"));}
-				else if (i==right) {game.setGameState(new State(Game.btl.getGameId(), "right"));}
-				else if (i==select) {game.setGameState(new State(Game.btl.getGameId(), "select"));}
-				else if (i==cancel) {game.setGameState(new State(Game.btl.getGameId(), "cancel"));}
-				else if (i==start) {game.setGameState(new State(Game.btl.getGameId(), "start"));}
+				if (i==up) {game.setGameState("up");}
+				else if (i==down) {game.setGameState("down");}
+				else if (i==left) {game.setGameState("left");}
+				else if (i==right) {game.setGameState("right");}
+				else if (i==select) {game.setGameState("select");}
+				else if (i==cancel) {game.setGameState("cancel");}
+				else if (i==start) {game.setGameState("start");}
 			} catch(RemoteException ex) {
 				ex.printStackTrace();
 			}

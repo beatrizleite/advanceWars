@@ -13,7 +13,7 @@ public class ObserverImpl extends UnicastRemoteObject implements ObserverRI {
     private int chr;
     private Game game;
     private AdvanceWarsRI gameLobby;
-    private State state;
+    private String state;
     private Battle btl;
 
     public ObserverImpl(AdvanceWarsRI gameLobby, String user, int chr, Game game) throws RemoteException {
@@ -60,11 +60,7 @@ public class ObserverImpl extends UnicastRemoteObject implements ObserverRI {
     public void update() throws RemoteException {
         state = gameLobby.getState();
         System.out.println("Observer state updated: "+ state);
-        Game.updates(state.getState());
-    }
-
-    public void setBattle(Battle btl)  throws RemoteException{
-        this.btl = btl;
+        Game.updates(state);
     }
 
     @Override

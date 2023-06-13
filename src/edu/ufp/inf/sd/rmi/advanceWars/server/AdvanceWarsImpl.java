@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.UUID;
 
 public class AdvanceWarsImpl extends UnicastRemoteObject implements AdvanceWarsRI {
-    private State state;
+    private String state;
     private List<ObserverRI> observers;
     private UUID id;
     private String map;
@@ -47,6 +47,11 @@ public class AdvanceWarsImpl extends UnicastRemoteObject implements AdvanceWarsR
     }
 
     @Override
+    public int getMax() {
+        return max;
+    }
+
+    @Override
     public void attach(ObserverRI observerRI) throws RemoteException {
         if(this.howManyPlayers() < max && !this.getObs().contains(observerRI)) {
             this.getObs().add(observerRI);
@@ -74,15 +79,27 @@ public class AdvanceWarsImpl extends UnicastRemoteObject implements AdvanceWarsR
     }
 
     @Override
-    public State getState() throws RemoteException {
+    public String getState() throws RemoteException {
         return state;
     }
 
     @Override
-    public void setGameState(State state) throws RemoteException {
+    public void setState(String state, ObserverRI obs) throws RemoteException {
+        if(this.tokenRing.currentHolder() == this.observers.indexOf(obs)) {
+            this.state = state;
+            this.notifyObs();
+            if(state.compareTo("endTurn") == 0) {
+                this.tokenRing.nextHolder();
+            }
+        }
+    }
+    @Override
+    public void setGameState(String state) throws RemoteException {
         this.state = state;
         notifyObs();
     }
+
+
 
     public void notifyObs() throws RemoteException {
         for(ObserverRI obs : observers) {

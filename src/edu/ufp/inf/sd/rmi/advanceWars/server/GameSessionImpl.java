@@ -72,5 +72,14 @@ public class GameSessionImpl extends UnicastRemoteObject implements GameSessionR
         }
     }
 
+    @Override
+    public synchronized void deleteGame() throws RemoteException {
+        for (AdvanceWarsRI game : games) {
+            if(game.howManyPlayers() == 0) {
+                games.remove(game);
+            }
+        }
+    }
+
 
 }

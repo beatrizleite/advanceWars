@@ -74,7 +74,7 @@ public class Battle {
 
 	public void EndTurn() {
 		try {
-			game.setGameState(new State(gameid, "endturn"));
+			game.setGameState("endTurn");
 		} catch (RemoteException e) {
 			e.printStackTrace();
 		}
@@ -140,7 +140,7 @@ public class Battle {
 	}*/
 	public void Buyunit(int type, int x, int y) {
 		try {
-			game.setGameState(new State(gameid, "buy "+type+" "+x+" "+y));
+			game.setGameState("buy "+type+" "+x+" "+y);
 		} catch (RemoteException e) {
 			e.printStackTrace();
 		}

@@ -2,6 +2,7 @@ package menus;
 
 import edu.ufp.inf.sd.rmi.advanceWars.client.ObserverImpl;
 import edu.ufp.inf.sd.rmi.advanceWars.server.AdvanceWarsImpl;
+import edu.ufp.inf.sd.rmi.advanceWars.server.GameSessionRI;
 import engine.Game;
 import edu.ufp.inf.sd.rmi.advanceWars.server.AdvanceWarsRI;
 import edu.ufp.inf.sd.rmi.advanceWars.server.User;
@@ -30,6 +31,7 @@ public class Join implements ActionListener {
     JButton Refresh = new JButton("Refresh");
 
     private ArrayList<AdvanceWarsRI> games = new ArrayList<>();
+    private Game game;
 
 
     public Join() throws RemoteException {
@@ -69,14 +71,23 @@ public class Join implements ActionListener {
     }
 
     DefaultListModel<String> getGames() throws RemoteException {
-        int max = 0;
         DefaultListModel<String> gameList = new DefaultListModel<>();
         int i = 0;
+        String g;
         for (AdvanceWarsRI game : Game.session.getGames()) {
-            this.games.add(i, game);
-            i++;
-            String g = game.getId() +": "+game.getMap()+"; "+ max;
-            gameList.addElement(g);
+            if (game.howManyPlayers() != 0) {
+                this.games.add(i, game);
+                i++;
+                if (game.howManyPlayers() == game.getMax()) {
+                    g = "!!ONGOING!! "+game.getMap()+": "+ game.howManyPlayers() + "/"+game.getMax();
+                    gameList.addElement(g);
+                } else {
+                    g = game.getMap()+": "+ game.howManyPlayers() + "/"+game.getMax();
+                    gameList.addElement(g);
+                }
+
+            }
+
         }
         return gameList;
     }

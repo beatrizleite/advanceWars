@@ -10,8 +10,9 @@ import java.util.UUID;
 public interface AdvanceWarsRI extends Remote {
     void attach(ObserverRI observerRI) throws RemoteException;
     void detach(ObserverRI observerRI) throws RemoteException;
-    State getState() throws RemoteException;
-    void setGameState(State state) throws RemoteException;
+    String getState() throws RemoteException;
+    void setGameState(String state) throws RemoteException;
+    void setState(String state, ObserverRI obs) throws RemoteException;
     UUID getId() throws RemoteException;
     void setId(UUID id) throws RemoteException;
     void notifyObs() throws RemoteException;
@@ -23,5 +24,5 @@ public interface AdvanceWarsRI extends Remote {
     int howManyPlayers() throws RemoteException;
     List<ObserverRI> getObs() throws RemoteException;
     void startGame() throws RemoteException;
-
+    int getMax() throws RemoteException;
     }
