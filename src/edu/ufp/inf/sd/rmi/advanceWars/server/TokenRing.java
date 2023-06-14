@@ -1,9 +1,5 @@
 package edu.ufp.inf.sd.rmi.advanceWars.server;
 
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.Date;
 import java.util.Timer;
 
 public class TokenRing {

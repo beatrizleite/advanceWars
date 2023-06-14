@@ -74,8 +74,8 @@ public class Battle {
 	}
 
 	public void EndTurn() {
-		MenuHandler.CloseMenu();
 		players.Base ply = Game.player.get(currentplayer);
+
 		for (units.Base unit : Game.units) {
 			unit.acted=false;
 			unit.moved=false;

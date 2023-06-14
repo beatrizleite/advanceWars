@@ -55,6 +55,9 @@ public class InputHandler implements KeyListener,MouseListener,ActionListener {
 	int DevPathing = 1;
 	public void keyPressed(KeyEvent e) {
 		try {
+			System.out.println(Game.btl.currentplayer);
+			System.out.println(Game.observer.getGameLobby().getTokenHolder());
+			System.out.println(Game.gameLobby.getObsId(Game.username));
 			if(Game.btl.currentplayer != Game.observer.getGameLobby().getTokenHolder()) {
 				return;
 			}
@@ -66,17 +69,23 @@ public class InputHandler implements KeyListener,MouseListener,ActionListener {
 		if (Game.GameState==Game.State.PLAYING) {
 			players.Base ply = Game.player.get(Game.btl.currentplayer);
 			AdvanceWarsRI game = Game.gameLobby;
-
 			try {
-				if (i==up) {game.setGameState("up");}
-				else if (i==down) {game.setGameState("down");}
-				else if (i==left) {game.setGameState("left");}
-				else if (i==right) {game.setGameState("right");}
-				else if (i==select) {game.setGameState("select");}
-				else if (i==cancel) {game.setGameState("cancel");}
-				else if (i==start) {
-					//game.setGameState("start");}
-					new menus.Pause();
+				if(Game.gameLobby.getTokenHolder() == Game.btl.currentplayer ) {
+					if(Game.gameLobby.getObsId(Game.username) == Game.btl.currentplayer) {
+						if (i==up) {game.setGameState("up");}
+						else if (i==down) {game.setGameState("down");}
+						else if (i==left) {game.setGameState("left");}
+						else if (i==right) {game.setGameState("right");}
+						else if (i==select) {game.setGameState("select");}
+						else if (i==cancel) {game.setGameState("cancel");}
+						else if (i==start) {
+							game.setGameState("start");
+						}
+					} else {
+						return;
+					}
+				} else {
+					return;
 				}
 			} catch(RemoteException ex) {
 				ex.printStackTrace();

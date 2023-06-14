@@ -1,6 +1,7 @@
 package edu.ufp.inf.sd.rmi.advanceWars.server;
 
 import edu.ufp.inf.sd.rmi.advanceWars.client.ObserverRI;
+import engine.Game;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -85,13 +86,13 @@ public class AdvanceWarsImpl extends UnicastRemoteObject implements AdvanceWarsR
 
     @Override
     public void setState(String state, ObserverRI obs) throws RemoteException {
-        if(this.tokenRing.currentHolder() == this.observers.indexOf(obs)) {
-            this.state = state;
-            this.notifyObs();
+            if(this.tokenRing.currentHolder() == this.observers.indexOf(obs)) {
+                this.state = state;
+                this.notifyObs();
+            }
             if(state.compareTo("endturn") == 0) {
                 this.tokenRing.nextHolder();
             }
-        }
     }
 
     public int getTokenHolder() throws RemoteException{

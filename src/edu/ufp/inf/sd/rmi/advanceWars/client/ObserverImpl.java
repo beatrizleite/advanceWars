@@ -57,11 +57,12 @@ public class ObserverImpl extends UnicastRemoteObject implements ObserverRI {
 
     public void update() throws RemoteException {
         state = gameLobby.getState();
-        System.out.println("Observer state updated: "+ state);
+        String curr = Game.gameLobby.getObs().get(Game.observer.getGameLobby().getTokenHolder()).getUser();
+        System.out.println("Observer "+ curr +" state updated: "+ state);
         updates(state);
     }
 
-    public static void updates(String move) {
+    public static void updates(String move) throws RemoteException {
         if(Game.GameState == Game.State.PLAYING) {
             Base ply = Game.player.get(Game.btl.currentplayer);
             switch (move) {
@@ -90,10 +91,14 @@ public class ObserverImpl extends UnicastRemoteObject implements ObserverRI {
                 }
                 default -> {
                     if(move.startsWith("buy")) {
-                        String[] params = move.split(" ");
-                        Game.btl.Buyunit(Integer.parseInt(params[1]),
-                                Integer.parseInt(params[2]),
-                                Integer.parseInt(params[3]));
+                        if(Game.gameLobby.getTokenHolder() == Game.btl.currentplayer ) {
+                            if (Game.gameLobby.getObsId(Game.username) == Game.btl.currentplayer) {
+                                String[] params = move.split(" ");
+                                Game.btl.Buyunit(Integer.parseInt(params[1]),
+                                        Integer.parseInt(params[2]),
+                                        Integer.parseInt(params[3]));
+                            }
+                        }
                     }
                 }
             }
