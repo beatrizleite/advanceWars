@@ -130,13 +130,6 @@ public class Battle {
 		}
 	}	
 	/**This will be redone when I set up the unit buying menu.*/
-	/*public void Buyunit(int type, int x, int y) {
-		double cost = Game.displayU.get(type).cost*Game.player.get(currentplayer).CostBonus;
-		if (Game.player.get(currentplayer).money>=cost) {
-			Game.units.add(Game.list.CreateUnit(type, currentplayer, x, y, false));
-			Game.player.get(currentplayer).money-=cost;
-		}
-	}*/
 	public void Buyunit(int type, int x, int y) {
 		double cost = Game.displayU.get(type).cost*Game.player.get(currentplayer).CostBonus;
 		if (Game.player.get(currentplayer).money>=cost) {

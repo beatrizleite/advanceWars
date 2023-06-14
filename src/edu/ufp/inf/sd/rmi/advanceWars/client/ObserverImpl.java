@@ -54,9 +54,6 @@ public class ObserverImpl extends UnicastRemoteObject implements ObserverRI {
         return gameLobby;
     }
 
-    public void setGameLobby(AdvanceWarsRI gameLobby) throws RemoteException {
-        this.gameLobby = gameLobby;
-    }
 
     public void update() throws RemoteException {
         state = gameLobby.getState();
