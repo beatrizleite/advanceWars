@@ -4,6 +4,8 @@ import edu.ufp.inf.sd.rmi.advanceWars.server.AdvanceWarsRI;
 import edu.ufp.inf.sd.rmi.advanceWars.server.State;
 import engine.Battle;
 import engine.Game;
+import menus.MenuHandler;
+import players.Base;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -58,7 +60,45 @@ public class ObserverImpl extends UnicastRemoteObject implements ObserverRI {
     public void update() throws RemoteException {
         state = gameLobby.getState();
         System.out.println("Observer state updated: "+ state);
-        Game.updates(state);
+        updates(state);
+    }
+
+    public static void updates(String move) {
+        Base ply = Game.player.get(Game.btl.currentplayer);
+        if(Game.GameState == Game.State.PLAYING) {
+            switch (move) {
+                case "up":
+                    ply.selecty--;
+                    if (ply.selecty < 0) ply.selecty++;
+                    break;
+                case "down":
+                    ply.selecty++;
+                    if( ply.selecty >= Game.map.height) ply.selecty--;
+                    break;
+                case "left":
+                    ply.selectx--;
+                    if (ply.selectx < 0) ply.selectx++;
+                    break;
+                case "right":
+                    ply.selectx++;
+                    if (ply.selectx > Game.map.width) ply.selectx--;
+                    break;
+                case "select":
+                    Game.btl.Action();
+                    break;
+                case "cancel":
+                    Game.player.get(Game.btl.currentplayer).Cancle();
+                    break;
+                case "start":
+                    new menus.Pause();
+                    break;
+                case "endturn":
+                    MenuHandler.CloseMenu();
+                    Game.btl.EndTurn();
+                    break;
+            }
+        }
+
     }
 
     @Override

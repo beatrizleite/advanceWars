@@ -67,7 +67,10 @@ public class InputHandler implements KeyListener,MouseListener,ActionListener {
 				else if (i==right) {game.setGameState("right");}
 				else if (i==select) {game.setGameState("select");}
 				else if (i==cancel) {game.setGameState("cancel");}
-				else if (i==start) {game.setGameState("start");}
+				else if (i==start) {
+					//game.setGameState("start");}
+					new menus.Pause();
+				}
 			} catch(RemoteException ex) {
 				ex.printStackTrace();
 			}

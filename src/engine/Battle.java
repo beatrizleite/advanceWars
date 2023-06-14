@@ -74,7 +74,7 @@ public class Battle {
 
 	public void EndTurn() {
 		try {
-			Game.gameLobby.setGameState("endTurn");
+			Game.gameLobby.setGameState("endturn");
 		} catch (RemoteException e) {
 			e.printStackTrace();
 		}

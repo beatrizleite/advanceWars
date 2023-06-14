@@ -179,46 +179,6 @@ public class Game extends JFrame {
 		}
 	}
 
-	public static void updates(String move) {
-		Base ply = Game.player.get(Game.btl.currentplayer);
-
-		if(move.startsWith("buy")) {
-			String[] args = move.split(" ");
-			btl.Buyunit(Integer.parseInt(args[1]), Integer.parseInt(args[2]), Integer.parseInt(args[3]));
-		}
-		switch (move) {
-			case "up":
-				ply.selecty--;
-				if (ply.selecty < 0) ply.selecty++;
-				break;
-			case "down":
-				ply.selecty++;
-				if( ply.selecty >= Game.map.height) ply.selecty--;
-				break;
-			case "left":
-				ply.selectx--;
-				if (ply.selectx < 0) ply.selectx++;
-				break;
-			case "right":
-				ply.selectx++;
-				if (ply.selectx > Game.map.width) ply.selectx--;
-				break;
-			case "select":
-				Game.btl.Action();
-				break;
-			case "cancel":
-				Game.player.get(Game.btl.currentplayer).Cancle();
-				break;
-			case "start":
-				new menus.Pause();
-				break;
-			case "endturn":
-				MenuHandler.CloseMenu();
-				Game.btl.EndTurn();
-				break;
-		}
-	}
-
 	public void startGame(AdvanceWarsRI gameLobby) throws RemoteException {
 		boolean[] npc = {false, false, false, false};
 		int[] chrs = new int[4];
