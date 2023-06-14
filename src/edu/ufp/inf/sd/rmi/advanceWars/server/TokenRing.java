@@ -15,10 +15,6 @@ public class TokenRing {
     public TokenRing(int ringMax) {
         this.ringMax = ringMax;
         this.ringPlace = 0;
-        LocalDateTime thirtySecsLater = LocalDateTime.now().plusSeconds(30);
-        Date now = Date.from(Instant.now());
-        Date thirtySecsLaterDate = Date.from(thirtySecsLater.atZone(ZoneId.systemDefault()).toInstant());
-        if(now.equals(thirtySecsLaterDate)) nextHolder();
 
     }
     public void nextHolder() {

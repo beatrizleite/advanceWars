@@ -15,6 +15,7 @@ public class ObserverImpl extends UnicastRemoteObject implements ObserverRI {
     private AdvanceWarsRI gameLobby;
     private String state;
     private Battle btl;
+    private boolean waiting = false;
 
     public ObserverImpl(AdvanceWarsRI gameLobby, String user, int chr, Game game) throws RemoteException {
         super();
@@ -66,5 +67,15 @@ public class ObserverImpl extends UnicastRemoteObject implements ObserverRI {
     @Override
     public void startGame() throws RemoteException {
         game.startGame(this.gameLobby);
+    }
+
+    @Override
+    public void setWaiting(boolean waiting)throws RemoteException {
+        this.waiting = waiting;
+    }
+
+    @Override
+    public boolean getWaiting()throws RemoteException {
+        return waiting;
     }
 }

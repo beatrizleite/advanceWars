@@ -111,9 +111,15 @@ public class Join implements ActionListener {
                 AdvanceWarsRI gameLobby = Game.session.getGame(id);
                 if (!gameLobby.isFull() && !gameLobby.isRunning()) {
                     Game.gameLobby = Game.session.getGame(id);
-                    Game.observer = new ObserverImpl(Game.gameLobby, Game.username, Game.chr, Game.game);
-                    Game.gameLobby.attach(Game.observer);
-                    new PlayerSelectionLobby(Game.gameLobby.getMap(), id);
+                    if (gameLobby.howManyPlayers()+1 == gameLobby.getMax()) {
+                        new PlayerSelectionLobby(Game.gameLobby.getMap(), id, true);
+                    } else {
+                        Game.observer = new ObserverImpl(Game.gameLobby, Game.username, Game.chr, Game.game);
+                        Game.gameLobby.attach(Game.observer);
+                        new PlayerSelectionLobby(Game.gameLobby.getMap(), id, false);
+                    }
+
+
                 } else {
                     Game.error.ShowError("Lobby is already full!");
                 }

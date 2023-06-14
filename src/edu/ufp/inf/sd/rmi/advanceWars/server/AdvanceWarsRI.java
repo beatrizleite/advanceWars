@@ -25,4 +25,4 @@ public interface AdvanceWarsRI extends Remote {
     List<ObserverRI> getObs() throws RemoteException;
     void startGame() throws RemoteException;
     int getMax() throws RemoteException;
-    }
+}

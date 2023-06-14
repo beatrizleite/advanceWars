@@ -5,11 +5,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
 
+import edu.ufp.inf.sd.rmi.advanceWars.client.ObserverImpl;
+import edu.ufp.inf.sd.rmi.advanceWars.client.ObserverRI;
 import edu.ufp.inf.sd.rmi.advanceWars.server.AdvanceWarsImpl;
 import edu.ufp.inf.sd.rmi.advanceWars.server.AdvanceWarsRI;
 import edu.ufp.inf.sd.rmi.advanceWars.server.GameSessionRI;
@@ -41,11 +44,21 @@ public class PlayerSelectionLobby implements ActionListener {
 	String mapname;
 	int player;
 	String username;
+	ObserverRI obs;
+	List<ObserverRI> observers;
+	boolean lastPlayer;
 
-	public PlayerSelectionLobby(String map, UUID id) throws RemoteException {
+	public PlayerSelectionLobby(String map, UUID id, boolean lastPlayer) throws RemoteException {
+		this.lastPlayer = lastPlayer;
 		mapname = map;
 		this.id = id;
 		this.player = Game.gameLobby.getObsId(Game.username);
+		this.observers = Game.gameLobby.getObs();
+		for (ObserverRI o : observers) {
+			if(Game.gameLobby.getObsId(o.getUser()) == player) {
+				this.obs = o;
+			}
+		}
 		this.username = Game.username;
 		npc[player] = false;
 
@@ -53,15 +66,15 @@ public class PlayerSelectionLobby implements ActionListener {
 
 		for (int i = 0; i < 1; i++) {
 			Prev[i].addActionListener(this);
-			Prev[i].setBounds(size.x + 10 + 84 * i, size.y + 10, 64, 32);
+			Prev[i].setBounds(size.x + 10 + 84, size.y + 10, 128, 32);
 			Game.gui.add(Prev[i]);
 			Next[i].addActionListener(this);
-			Next[i].setBounds(size.x + 10 + 84 * i, size.y + 100, 64, 32);
+			Next[i].setBounds(size.x + 10 + 84, size.y + 100, 128, 32);
 			Game.gui.add(Next[i]);
 			ManOrMachine[i].addActionListener(this);
-			ManOrMachine[i].setBounds(size.x + 12 + 84 * i, size.y + 68, 58, 24);
+			ManOrMachine[i].setBounds(size.x + 12 + 84, size.y + 68, 116, 24);
 			Game.gui.add(ManOrMachine[i]);
-			Name[i].setBounds(size.x + 10 + 84 * i, size.y + 40, 64, 32);
+			Name[i].setBounds(size.x + 10 + 84, size.y + 40, 128, 32);
 			Game.gui.add(Name[i]);
 		}
 		SetBounds(size);
@@ -113,7 +126,18 @@ public class PlayerSelectionLobby implements ActionListener {
 			}
 		}
 		else if(s == ThunderbirdsAreGo) {
-			new WaitingRoom(id);
+			try {
+
+				new WaitingRoom(id);
+				if(lastPlayer) {
+					Game.observer = new ObserverImpl(Game.gameLobby, Game.username, Game.chr, Game.game);
+					Game.observer.setWaiting(true);
+					Game.gameLobby.attach(Game.observer);
+				}
+			} catch (RemoteException ex) {
+				throw new RuntimeException(ex);
+			}
+
 		}
 		for (int i = 0; i < 1; i++) {
 			if (s == Prev[i]) {
@@ -121,12 +145,22 @@ public class PlayerSelectionLobby implements ActionListener {
 				if (plyer[i]<0) {plyer[i]=Game.displayC.size()-1;}
 				Name[i].setText(Game.displayC.get(plyer[i]).name);
 				Game.chr = plyer[i];
+				try {
+					obs.setChr(plyer[i]);
+				} catch (RemoteException ex) {
+					throw new RuntimeException(ex);
+				}
 			}
 			else if (s == Next[i]) {
 				plyer[i]++;
 				if (plyer[i]>Game.displayC.size()-1) {plyer[i]=0;}
 				Name[i].setText(Game.displayC.get(plyer[i]).name);
 				Game.chr = plyer[i];
+				try {
+					obs.setChr(plyer[i]);
+				} catch (RemoteException ex) {
+					throw new RuntimeException(ex);
+				}
 			}
 			else if (s == ManOrMachine[i]) {
 				ManOrMachine[i].setText("PLY");

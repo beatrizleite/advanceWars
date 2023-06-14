@@ -1,8 +1,9 @@
 package menus;
 
-import java.awt.Point;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.rmi.RemoteException;
 import javax.swing.JButton;
 import engine.Game;
 
@@ -55,8 +56,18 @@ public class Pause implements ActionListener {
 			Game.gui.LoginScreen();
 		}
 		else if (s==EndTurn) {
-			MenuHandler.CloseMenu();
-			Game.btl.EndTurn();
+			try {
+				if (Game.gameLobby.isFull()) {
+					Game.observer.getGameLobby().setState("endTurn", Game.observer);
+				} else {
+					MenuHandler.CloseMenu();
+					Game.btl.EndTurn();
+				}
+
+			} catch (RemoteException ex) {
+				throw new RuntimeException(ex);
+			}
+
 		}
 		else if (s==Resume) {MenuHandler.CloseMenu();}
 		else if (s==Save) {Game.save.SaveGame();}

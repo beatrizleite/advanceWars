@@ -20,4 +20,6 @@ public interface ObserverRI extends Remote {
         void setGameLobby(AdvanceWarsRI gameLobby) throws RemoteException;
         void update() throws RemoteException;
         void startGame() throws RemoteException;
+        void setWaiting(boolean waiting) throws RemoteException;
+        boolean getWaiting() throws RemoteException;
 }

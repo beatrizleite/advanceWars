@@ -52,7 +52,7 @@ public class CreateGameLobby implements ActionListener {
                 UUID id = Game.gameLobby.getId();
                 Game.observer = new ObserverImpl(Game.gameLobby, Game.username, Game.chr, Game.game);
                 Game.gameLobby.attach(Game.observer);
-                new PlayerSelectionLobby("SmallVs", id);
+                new PlayerSelectionLobby("SmallVs", id, false);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -62,7 +62,7 @@ public class CreateGameLobby implements ActionListener {
                 UUID id = Game.gameLobby.getId();
                 Game.observer = new ObserverImpl(Game.gameLobby, Game.username, Game.chr, Game.game);
                 Game.gameLobby.attach(Game.observer);
-                new PlayerSelectionLobby("FourCorners", id);
+                new PlayerSelectionLobby("FourCorners", id, false);
             } catch (RemoteException e) {
                 throw new RuntimeException(e);
             }

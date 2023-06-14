@@ -74,11 +74,10 @@ public class Battle {
 
 	public void EndTurn() {
 		try {
-			game.setGameState("endTurn");
+			Game.gameLobby.setGameState("endTurn");
 		} catch (RemoteException e) {
 			e.printStackTrace();
 		}
-		MenuHandler.CloseMenu();
 		players.Base ply = Game.player.get(currentplayer);
 		for (units.Base unit : Game.units) {
 			unit.acted=false;
@@ -109,7 +108,7 @@ public class Battle {
 	
 	public void Action() {
 		players.Base ply = Game.player.get(currentplayer);
-		//if (ply.npc) {return;}
+		if (ply.npc) {return;}
 		if (ply.unitselected) {
 			if (currentplayer==Game.units.get(ply.selectedunit).owner) {//Action
 				if (Game.units.get(ply.selectedunit).moved&&!Game.units.get(ply.selectedunit).acted) {
@@ -139,12 +138,6 @@ public class Battle {
 		}
 	}*/
 	public void Buyunit(int type, int x, int y) {
-		try {
-			game.setGameState("buy "+type+" "+x+" "+y);
-		} catch (RemoteException e) {
-			e.printStackTrace();
-		}
-		MenuHandler.CloseMenu();
 		double cost = Game.displayU.get(type).cost*Game.player.get(currentplayer).CostBonus;
 		if (Game.player.get(currentplayer).money>=cost) {
 			Game.units.add(Game.list.CreateUnit(type, currentplayer, x, y, false));

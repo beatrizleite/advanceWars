@@ -18,6 +18,7 @@ public class AdvanceWarsImpl extends UnicastRemoteObject implements AdvanceWarsR
     private int max;
     private boolean running;
     private TokenRing tokenRing;
+    private boolean waiting = false;
 
     public AdvanceWarsImpl(String map, String username) throws RemoteException {
         super();
