@@ -66,7 +66,7 @@ public class SetupContextRMI {
         }
 
         //2. Set security context
-        //setupSecurityManager();
+        setupSecurityManager();
 
         //3. Set and list registry context
         setupRegistryContext(registryHostIP, registryHostIP);
@@ -114,7 +114,7 @@ public class SetupContextRMI {
     private void setupSecurityManager() {
         if (System.getSecurityManager() == null) {
             logger.log(Level.INFO, "set security manager for {0}", subsystemClass.getName());
-            System.setSecurityManager(new SecurityManager());
+            //System.setSecurityManager(new SecurityManager());
         }
     }
 

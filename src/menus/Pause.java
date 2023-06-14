@@ -58,7 +58,7 @@ public class Pause implements ActionListener {
 		else if (s==EndTurn) {
 			try {
 				if (Game.gameLobby.isFull()) {
-					Game.observer.getGameLobby().setState("endTurn", Game.observer);
+					Game.observer.getGameLobby().setState("endturn", Game.observer);
 				} else {
 					MenuHandler.CloseMenu();
 					Game.btl.EndTurn();

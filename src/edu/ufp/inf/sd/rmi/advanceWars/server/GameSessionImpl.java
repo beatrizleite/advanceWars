@@ -23,22 +23,8 @@ public class GameSessionImpl extends UnicastRemoteObject implements GameSessionR
     }
 
     @Override
-    public User getUser() throws RemoteException {
-        return this.user;
-    }
-
-    @Override
-    public String getUsername() throws RemoteException {
-        return this.username;
-    }
-
-    @Override
     public ArrayList<AdvanceWarsRI> getGames() throws RemoteException {
         return this.db.getGames();
-    }
-
-    private void addSession(String name, DB db) throws RemoteException {
-        this.db.addSession(name, this);
     }
 
     public AdvanceWarsRI getGame(UUID id) throws RemoteException {
@@ -46,7 +32,8 @@ public class GameSessionImpl extends UnicastRemoteObject implements GameSessionR
     }
     @Override
     public AdvanceWarsRI createGame(String map, GameSessionRI gameSessionRI) throws RemoteException {
-        AdvanceWarsRI game = new AdvanceWarsImpl(map, username);
+        AdvanceWarsRI game = new AdvanceWarsImpl(map);
+        games.add(game);
         this.db.addGame(game);
         return game;
     }

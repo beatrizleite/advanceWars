@@ -20,11 +20,10 @@ public class AdvanceWarsImpl extends UnicastRemoteObject implements AdvanceWarsR
     private TokenRing tokenRing;
     private boolean waiting = false;
 
-    public AdvanceWarsImpl(String map, String username) throws RemoteException {
+    public AdvanceWarsImpl(String map) throws RemoteException {
         super();
         this.id = UUID.randomUUID();
         this.map = map;
-        this.username = username;
         this.observers = Collections.synchronizedList(new ArrayList<>());
         if (this.map.compareTo("SmallVs") == 0) {
             this.max = 2;
@@ -89,10 +88,14 @@ public class AdvanceWarsImpl extends UnicastRemoteObject implements AdvanceWarsR
         if(this.tokenRing.currentHolder() == this.observers.indexOf(obs)) {
             this.state = state;
             this.notifyObs();
-            if(state.compareTo("endTurn") == 0) {
+            if(state.compareTo("endturn") == 0) {
                 this.tokenRing.nextHolder();
             }
         }
+    }
+
+    public int getTokenHolder() throws RemoteException{
+        return this.tokenRing.currentHolder();
     }
     @Override
     public void setGameState(String state) throws RemoteException {

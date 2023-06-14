@@ -8,8 +8,6 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 public interface GameSessionRI extends Remote {
-    User getUser() throws RemoteException;
-    String getUsername() throws RemoteException;
     ArrayList<AdvanceWarsRI> getGames() throws RemoteException;
     AdvanceWarsRI getGame(UUID id) throws RemoteException;
     AdvanceWarsRI createGame(String map, GameSessionRI gameSessionRI) throws RemoteException;

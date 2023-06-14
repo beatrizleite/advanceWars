@@ -3,6 +3,7 @@ package menus;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.rmi.RemoteException;
 import javax.swing.JButton;
 import javax.swing.JTextArea;
 
@@ -63,6 +64,12 @@ public class EndBattle implements ActionListener {
 		if (s==Return) {
 			MenuHandler.CloseMenu();
 			Game.gui.LoginScreen();
+			try {
+				Game.gameLobby.detach(Game.observer);
+				Game.session.removeGame(Game.gameLobby);
+			} catch (RemoteException ex) {
+				throw new RuntimeException(ex);
+			}
 		}
 	}
 }

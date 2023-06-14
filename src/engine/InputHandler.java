@@ -54,6 +54,13 @@ public class InputHandler implements KeyListener,MouseListener,ActionListener {
 
 	int DevPathing = 1;
 	public void keyPressed(KeyEvent e) {
+		try {
+			if(Game.btl.currentplayer != Game.observer.getGameLobby().getTokenHolder()) {
+				return;
+			}
+		} catch (RemoteException ex) {
+			throw new RuntimeException(ex);
+		}
 		int i=e.getKeyCode();
 		if (i==exit) {System.exit(0);}
 		if (Game.GameState==Game.State.PLAYING) {

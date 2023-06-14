@@ -16,7 +16,6 @@ public class ObserverImpl extends UnicastRemoteObject implements ObserverRI {
     private Game game;
     private AdvanceWarsRI gameLobby;
     private String state;
-    private Battle btl;
     private boolean waiting = false;
 
     public ObserverImpl(AdvanceWarsRI gameLobby, String user, int chr, Game game) throws RemoteException {
@@ -25,7 +24,6 @@ public class ObserverImpl extends UnicastRemoteObject implements ObserverRI {
         this.chr = chr;
         this.game = game;
         this.gameLobby = gameLobby;
-        this.gameLobby.attach(this);
     }
 
     public String getUser() throws RemoteException {
@@ -64,38 +62,40 @@ public class ObserverImpl extends UnicastRemoteObject implements ObserverRI {
     }
 
     public static void updates(String move) {
-        Base ply = Game.player.get(Game.btl.currentplayer);
         if(Game.GameState == Game.State.PLAYING) {
+            Base ply = Game.player.get(Game.btl.currentplayer);
             switch (move) {
-                case "up":
+                case "up" -> {
                     ply.selecty--;
                     if (ply.selecty < 0) ply.selecty++;
-                    break;
-                case "down":
+                }
+                case "down" -> {
                     ply.selecty++;
-                    if( ply.selecty >= Game.map.height) ply.selecty--;
-                    break;
-                case "left":
+                    if (ply.selecty >= Game.map.height) ply.selecty--;
+                }
+                case "left" -> {
                     ply.selectx--;
                     if (ply.selectx < 0) ply.selectx++;
-                    break;
-                case "right":
+                }
+                case "right" -> {
                     ply.selectx++;
                     if (ply.selectx > Game.map.width) ply.selectx--;
-                    break;
-                case "select":
-                    Game.btl.Action();
-                    break;
-                case "cancel":
-                    Game.player.get(Game.btl.currentplayer).Cancle();
-                    break;
-                case "start":
-                    new menus.Pause();
-                    break;
-                case "endturn":
+                }
+                case "select" -> Game.btl.Action();
+                case "cancel" -> Game.player.get(Game.btl.currentplayer).Cancle();
+                case "start" -> new menus.Pause();
+                case "endturn" -> {
                     MenuHandler.CloseMenu();
                     Game.btl.EndTurn();
-                    break;
+                }
+                default -> {
+                    if(move.startsWith("buy")) {
+                        String[] params = move.split(" ");
+                        Game.btl.Buyunit(Integer.parseInt(params[1]),
+                                Integer.parseInt(params[2]),
+                                Integer.parseInt(params[3]));
+                    }
+                }
             }
         }
 
@@ -103,16 +103,18 @@ public class ObserverImpl extends UnicastRemoteObject implements ObserverRI {
 
     @Override
     public void startGame() throws RemoteException {
+        System.out.println(this.gameLobby.getId());
+        System.out.println(Game.observer.getUser());
         game.startGame(this.gameLobby);
     }
 
     @Override
-    public void setWaiting(boolean waiting)throws RemoteException {
+    public void setWaiting(boolean waiting) throws RemoteException {
         this.waiting = waiting;
     }
 
     @Override
-    public boolean getWaiting()throws RemoteException {
+    public boolean getWaiting() throws RemoteException {
         return waiting;
     }
 }

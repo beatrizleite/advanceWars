@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.rmi.RemoteException;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -93,6 +94,11 @@ public class City implements ActionListener,ListSelectionListener {
 		Object s = e.getSource();
 		if (s==Return) {MenuHandler.CloseMenu();}
 		else if (s==Buy) {
+			try {
+				Game.observer.getGameLobby().setState("buy "+ids[Units.getSelectedIndex()]+" "+x+" "+y, Game.observer);
+			} catch (RemoteException ex) {
+				throw new RuntimeException(ex);
+			}
 			Game.btl.Buyunit(ids[Units.getSelectedIndex()], x, y);
 			MenuHandler.CloseMenu();
 		}

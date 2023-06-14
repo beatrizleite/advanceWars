@@ -4,6 +4,7 @@ import edu.ufp.inf.sd.rmi.advanceWars.server.AdvanceWarsRI;
 import edu.ufp.inf.sd.rmi.advanceWars.server.State;
 import menus.MenuHandler;
 
+import java.awt.*;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
@@ -73,11 +74,7 @@ public class Battle {
 	}
 
 	public void EndTurn() {
-		try {
-			Game.gameLobby.setGameState("endturn");
-		} catch (RemoteException e) {
-			e.printStackTrace();
-		}
+		MenuHandler.CloseMenu();
 		players.Base ply = Game.player.get(currentplayer);
 		for (units.Base unit : Game.units) {
 			unit.acted=false;
@@ -131,6 +128,7 @@ public class Battle {
 	}	
 	/**This will be redone when I set up the unit buying menu.*/
 	public void Buyunit(int type, int x, int y) {
+		MenuHandler.CloseMenu();
 		double cost = Game.displayU.get(type).cost*Game.player.get(currentplayer).CostBonus;
 		if (Game.player.get(currentplayer).money>=cost) {
 			Game.units.add(Game.list.CreateUnit(type, currentplayer, x, y, false));

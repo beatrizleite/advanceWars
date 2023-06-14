@@ -1,6 +1,7 @@
 package menus;
 
 import edu.ufp.inf.sd.rmi.advanceWars.client.ObserverImpl;
+import edu.ufp.inf.sd.rmi.advanceWars.client.ObserverRI;
 import edu.ufp.inf.sd.rmi.advanceWars.server.AdvanceWarsImpl;
 import edu.ufp.inf.sd.rmi.advanceWars.server.GameSessionRI;
 import engine.Game;
@@ -111,13 +112,31 @@ public class Join implements ActionListener {
                 AdvanceWarsRI gameLobby = Game.session.getGame(id);
                 if (!gameLobby.isFull() && !gameLobby.isRunning()) {
                     Game.gameLobby = Game.session.getGame(id);
-                    if (gameLobby.howManyPlayers()+1 == gameLobby.getMax()) {
-                        new PlayerSelectionLobby(Game.gameLobby.getMap(), id, true);
-                    } else {
-                        Game.observer = new ObserverImpl(Game.gameLobby, Game.username, Game.chr, Game.game);
-                        Game.gameLobby.attach(Game.observer);
-                        new PlayerSelectionLobby(Game.gameLobby.getMap(), id, false);
+                    for (ObserverRI obs : Game.gameLobby.getObs()) {
+                        if(Game.observer != null) {
+                            if(obs.getUser().compareTo(Game.observer.getUser()) == 0) {
+                                new WaitingRoom(Game.observer.getGameLobby().getId());
+                            } else {
+                                if (gameLobby.howManyPlayers()+1 == gameLobby.getMax()) {
+                                    new PlayerSelectionLobby(Game.gameLobby.getMap(), id, true);
+                                } else {
+                                    Game.observer = new ObserverImpl(Game.gameLobby, Game.username, Game.chr, Game.game);
+                                    Game.gameLobby.attach(Game.observer);
+                                    new PlayerSelectionLobby(Game.gameLobby.getMap(), id, false);
+                                }
+                            }
+                        } else {
+                            if (gameLobby.howManyPlayers()+1 == gameLobby.getMax()) {
+                                new PlayerSelectionLobby(Game.gameLobby.getMap(), id, true);
+                            } else {
+                                Game.observer = new ObserverImpl(Game.gameLobby, Game.username, Game.chr, Game.game);
+                                Game.gameLobby.attach(Game.observer);
+                                new PlayerSelectionLobby(Game.gameLobby.getMap(), id, false);
+                            }
+                        }
+
                     }
+
 
 
                 } else {

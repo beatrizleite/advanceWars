@@ -189,7 +189,6 @@ public class Game extends JFrame {
 			chrs[i] = obs.getChr();
 			i++;
 		}
-
 		System.out.println("Character: " + Game.chr);
 		MenuHandler.CloseMenu();
 		Game.btl.NewGame(game.getMap(), game.getId());
