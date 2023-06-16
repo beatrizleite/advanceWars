@@ -1,0 +1,72 @@
+package edu.ufp.inf.sd.rabbit.advanceWars.producer;
+
+import edu.ufp.inf.sd.rabbit.advanceWars.consumer.ObserverRI;
+
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
+import java.util.ArrayList;
+import java.util.UUID;
+
+public class GameSessionImpl extends UnicastRemoteObject implements GameSessionRI {
+    GameFactoryImpl gameFactory;
+    private User user;
+    private String username;
+    private ArrayList<AdvanceWarsRI> games = new ArrayList<>();
+    DB db;
+    public GameSessionImpl(GameFactoryImpl gameFactory, User user) throws RemoteException {
+        super();
+        this.gameFactory = gameFactory;
+        this.user = user;
+        this.username = user.getName();
+        this.db = DB.getInstance();
+
+    }
+
+    @Override
+    public ArrayList<AdvanceWarsRI> getGames() throws RemoteException {
+        return this.db.getGames();
+    }
+
+    public AdvanceWarsRI getGame(UUID id) throws RemoteException {
+        return db.getGame(id);
+    }
+    @Override
+    public AdvanceWarsRI createGame(String map, GameSessionRI gameSessionRI) throws RemoteException {
+        AdvanceWarsRI game = new AdvanceWarsImpl(map);
+        games.add(game);
+        this.db.addGame(game);
+        return game;
+    }
+
+    public void removeGame(AdvanceWarsRI game) throws RemoteException{
+        this.db.removeGame(game);
+    }
+    public void logout() throws RemoteException {
+        System.out.println("User "+username+ " logged out!");
+        this.db.removeSession(this.username);
+    }
+
+    @Override
+    public void leaveGame(UUID id, ObserverRI observer) throws RemoteException {
+        this.games = getGames();
+        for (AdvanceWarsRI game: games) {
+            if(game.getId() == id) {
+                game.detach(observer);
+                if(game.howManyPlayers() == 0) {
+                    removeGame(game);
+                }
+            }
+        }
+    }
+
+    @Override
+    public synchronized void deleteGame() throws RemoteException {
+        for (AdvanceWarsRI game : games) {
+            if(game.howManyPlayers() == 0) {
+                games.remove(game);
+            }
+        }
+    }
+
+
+}

@@ -1,0 +1,28 @@
+package edu.ufp.inf.sd.rabbit.advanceWars.producer;
+
+import java.util.Timer;
+
+public class TokenRing {
+
+    private int ringPlace;
+    private int ringMax;
+    private Timer timer;
+
+    public TokenRing(int ringMax) {
+        this.ringMax = ringMax;
+        this.ringPlace = 0;
+
+    }
+    public void nextHolder() {
+        this.ringPlace++;
+        if (this.ringPlace >= this.ringMax) {
+            this.ringPlace = 0;
+        }
+    }
+
+    public int currentHolder() {
+        return this.ringPlace;
+    }
+
+
+}
