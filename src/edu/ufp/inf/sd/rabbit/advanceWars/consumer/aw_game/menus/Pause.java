@@ -3,6 +3,8 @@ package edu.ufp.inf.sd.rabbit.advanceWars.consumer.aw_game.menus;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import javax.swing.JButton;
 import edu.ufp.inf.sd.rabbit.advanceWars.consumer.aw_game.engine.Game;
 
@@ -55,8 +57,15 @@ public class Pause implements ActionListener {
 			Game.gui.LoginScreen();
 		}
 		else if (s==EndTurn) {
-			MenuHandler.CloseMenu();
-			Game.btl.EndTurn();
+
+			try {
+				String msg = "endturn;"+Game.id;
+				Game.observer.channel.basicPublish("", "queue_w", null, msg.getBytes(StandardCharsets.UTF_8));
+			} catch (IOException ex) {
+				throw new RuntimeException(ex);
+			}
+			//MenuHandler.CloseMenu();
+			//Game.btl.EndTurn();
 
 		}
 		else if (s==Resume) {MenuHandler.CloseMenu();}
